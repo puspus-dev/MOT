@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0d6e6e"/>
+      <stop offset="100%" style="stop-color:#0a4a4a"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f4a261"/>
+      <stop offset="100%" style="stop-color:#e76f51"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Rounded square background -->
+  <rect x="4" y="4" width="112" height="112" rx="24" ry="24" fill="url(#bgGrad)"/>
+  
+  <!-- Open book shape -->
+  <path d="M28 38 C28 38 38 32 60 32 C82 32 92 38 92 38 L92 82 C92 82 82 76 60 76 C38 76 28 82 28 82 Z" 
+        fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Book center fold -->
+  <line x1="60" y1="32" x2="60" y2="76" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+  
+  <!-- Left page lines -->
+  <line x1="36" y1="46" x2="52" y2="46" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.85"/>
+  <line x1="36" y1="54" x2="50" y2="54" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+  <line x1="36" y1="62" x2="52" y2="62" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+  
+  <!-- Right page lines -->
+  <line x1="68" y1="46" x2="84" y2="46" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.85"/>
+  <line x1="70" y1="54" x2="84" y2="54" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+  <line x1="68" y1="62" x2="84" y2="62" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+  
+  <!-- Smart / digital accent circle with spark -->
+  <circle cx="88" cy="34" r="16" fill="url(#accentGrad)"/>
+  <path d="M88 26 L90.5 32.5 L97.5 33.5 L92.5 38 L94 44.5 L88 41 L82 44.5 L83.5 38 L78.5 33.5 L85.5 32.5 Z" 
+        fill="#ffffff"/>
+</svg>

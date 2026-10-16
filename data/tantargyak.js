@@ -22,43 +22,43 @@ const MOT_ADATOK = {
           "oldalak": "9–15. oldal"
         },
         {
-          "cim": "A kommunikacio vilaga",
+          "cim": "A kommunikácio világa",
           "pdf": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/02_A_kommunikacio_vilaga/02_A_kommunikacio_vilaga.pdf",
           "feladat": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/02_A_kommunikacio_vilaga/feladatok.html",
           "oldalak": "16–39. oldal"
         },
         {
-          "cim": "Szofajok I az ige",
+          "cim": "Szófajok I az ige",
           "pdf": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/03_Szofajok_I_az_ige/03_Szofajok_I_az_ige.pdf",
           "feladat": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/03_Szofajok_I_az_ige/feladatok.html",
           "oldalak": "40–57. oldal"
         },
         {
-          "cim": "Szofajok II nevszok hatarozoszo",
+          "cim": "Szofajok II névszók határozószó",
           "pdf": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/04_Szofajok_II_nevszok_hatarozoszo/04_Szofajok_II_nevszok_hatarozoszo.pdf",
           "feladat": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/04_Szofajok_II_nevszok_hatarozoszo/feladatok.html",
           "oldalak": "58–99. oldal"
         },
         {
-          "cim": "Szofajok III nevmasok igenevek",
+          "cim": "Szófajok III névmások igenevek",
           "pdf": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/05_Szofajok_III_nevmasok_igenevek/05_Szofajok_III_nevmasok_igenevek.pdf",
           "feladat": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/05_Szofajok_III_nevmasok_igenevek/feladatok.html",
           "oldalak": "100–123. oldal"
         },
         {
-          "cim": "Szofajok IV viszonyszok mondatszok",
+          "cim": "Szófajok IV viszonyszok mondatszók",
           "pdf": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/06_Szofajok_IV_viszonyszok_mondatszok/06_Szofajok_IV_viszonyszok_mondatszok.pdf",
           "feladat": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/06_Szofajok_IV_viszonyszok_mondatszok/feladatok.html",
           "oldalak": "124–139. oldal"
         },
         {
-          "cim": "Szofajok V szofaji rendszer",
+          "cim": "Szófajok V szófaji rendszer",
           "pdf": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/07_Szofajok_V_szofaji_rendszer/07_Szofajok_V_szofaji_rendszer.pdf",
           "feladat": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/07_Szofajok_V_szofaji_rendszer/feladatok.html",
           "oldalak": "140–147. oldal"
         },
         {
-          "cim": "Fogalomtar",
+          "cim": "Fogalomtár",
           "pdf": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/08_Fogalomtar/08_Fogalomtar.pdf",
           "feladat": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/08_Fogalomtar/feladatok.html",
           "oldalak": "148–153. oldal"
@@ -71,7 +71,7 @@ const MOT_ADATOK = {
       "szin": "#7048e8",
       "fejezetek": [
         {
-          "cim": "Hosok",
+          "cim": "Hősok",
           "pdf": "6.osztaly/02_Irodalom_OH-MIR06TB/01_Hosok/01_Hosok.pdf",
           "feladat": "6.osztaly/02_Irodalom_OH-MIR06TB/01_Hosok/feladatok.html",
           "oldalak": "2–79. oldal"
@@ -95,7 +95,7 @@ const MOT_ADATOK = {
           "oldalak": "198–227. oldal"
         },
         {
-          "cim": "Regenyek",
+          "cim": "Regények",
           "pdf": "6.osztaly/02_Irodalom_OH-MIR06TB/05_Regenyek/05_Regenyek.pdf",
           "feladat": "6.osztaly/02_Irodalom_OH-MIR06TB/05_Regenyek/feladatok.html",
           "oldalak": "228–257. oldal"
@@ -108,31 +108,31 @@ const MOT_ADATOK = {
       "szin": "#1c7ed6",
       "fejezetek": [
         {
-          "cim": "Egesz szamok oszthatosag",
+          "cim": "Egész számok oszthatósága",
           "pdf": "6.osztaly/03_Matematika_tankonyv_OH-MAT06TA/01_Egesz_szamok_oszthatosag/01_Egesz_szamok_oszthatosag.pdf",
           "feladat": "6.osztaly/03_Matematika_tankonyv_OH-MAT06TA/01_Egesz_szamok_oszthatosag/feladatok.html",
           "oldalak": "9–54. oldal"
         },
         {
-          "cim": "Tortek",
+          "cim": "Törtek",
           "pdf": "6.osztaly/03_Matematika_tankonyv_OH-MAT06TA/02_Tortek/02_Tortek.pdf",
           "feladat": "6.osztaly/03_Matematika_tankonyv_OH-MAT06TA/02_Tortek/feladatok.html",
           "oldalak": "55–84. oldal"
         },
         {
-          "cim": "Geometria tengelyes tukrozes",
+          "cim": "Geometria tengelyes tükrözés",
           "pdf": "6.osztaly/03_Matematika_tankonyv_OH-MAT06TA/03_Geometria_tengelyes_tukrozes/03_Geometria_tengelyes_tukrozes.pdf",
           "feladat": "6.osztaly/03_Matematika_tankonyv_OH-MAT06TA/03_Geometria_tengelyes_tukrozes/feladatok.html",
           "oldalak": "85–122. oldal"
         },
         {
-          "cim": "Arany szazalek szoveges",
+          "cim": "Arany százalék szöveges",
           "pdf": "6.osztaly/03_Matematika_tankonyv_OH-MAT06TA/04_Arany_szazalek_szoveges/04_Arany_szazalek_szoveges.pdf",
           "feladat": "6.osztaly/03_Matematika_tankonyv_OH-MAT06TA/04_Arany_szazalek_szoveges/feladatok.html",
           "oldalak": "123–172. oldal"
         },
         {
-          "cim": "Kerulet terulet felszin terfogat",
+          "cim": "Kerület terület felszín térfogat",
           "pdf": "6.osztaly/03_Matematika_tankonyv_OH-MAT06TA/05_Kerulet_terulet_felszin_terfogat/05_Kerulet_terulet_felszin_terfogat.pdf",
           "feladat": "6.osztaly/03_Matematika_tankonyv_OH-MAT06TA/05_Kerulet_terulet_felszin_terfogat/feladatok.html",
           "oldalak": "173–202. oldal"
@@ -151,19 +151,19 @@ const MOT_ADATOK = {
       "szin": "#0c8599",
       "fejezetek": [
         {
-          "cim": "Egesz szamok oszthatosag",
+          "cim": "Egész számok oszthatósága",
           "pdf": "6.osztaly/04_Matematika_munkafuzet_OH-MAT06MA/01_Egesz_szamok_oszthatosag/01_Egesz_szamok_oszthatosag.pdf",
           "feladat": "6.osztaly/04_Matematika_munkafuzet_OH-MAT06MA/01_Egesz_szamok_oszthatosag/feladatok.html",
           "oldalak": "9–35. oldal"
         },
         {
-          "cim": "Tortek",
+          "cim": "Törtek",
           "pdf": "6.osztaly/04_Matematika_munkafuzet_OH-MAT06MA/02_Tortek/02_Tortek.pdf",
           "feladat": "6.osztaly/04_Matematika_munkafuzet_OH-MAT06MA/02_Tortek/feladatok.html",
           "oldalak": "36–54. oldal"
         },
         {
-          "cim": "Geometria tengelyes tukrozes",
+          "cim": "Geometria tengelyes tükrözés",
           "pdf": "6.osztaly/04_Matematika_munkafuzet_OH-MAT06MA/03_Geometria_tengelyes_tukrozes/03_Geometria_tengelyes_tukrozes.pdf",
           "feladat": "6.osztaly/04_Matematika_munkafuzet_OH-MAT06MA/03_Geometria_tengelyes_tukrozes/feladatok.html",
           "oldalak": "55–79. oldal"

@@ -1,133 +1,98 @@
 /* ==========================================================
-   MOT – stíluslap
+   MOT – közös stíluslap (minden oldal ezt használja)
    Tartalom: 1. Színek  2. Alapok  3. Fejléc  4. Bevezető
-             5. Évfolyamok  6. Kártyák  7. Panel  8. Lábléc
+             5. Szűrők  6. Tankönyvkártyák  7. Tankönyv nézet
+             8. Táblázat / szöveges oldalak  9. Lábléc
    ========================================================== */
 
 /* ---------- 1. SZÍNEK (itt érdemes módosítani) ---------- */
 :root {
-  --hatter:        #f3f6fb;   /* oldal háttere */
-  --kartya:        #ffffff;   /* kártyák, fejléc háttere */
-  --szoveg:        #1b2a41;   /* fő szövegszín */
-  --halvany:       #5b6b82;   /* másodlagos szöveg */
-  --keret:         #dde4ef;
-  --elsodleges:    #0b4f9c;   /* főszín (logó, linkek) */
-  --kiemelo:       #1c7ed6;   /* gombok, aktív fül */
-  --atmenet-1:     #0b4f9c;   /* kék sáv: kezdőszín */
-  --atmenet-2:     #1c7ed6;   /* kék sáv: végszín */
-  --arnyek:        0 2px 10px rgba(11, 79, 156, .08);
-  --sugar:         16px;      /* kártyák lekerekítése */
+  --hatter: #f3f6fb;  --kartya: #ffffff;  --szoveg: #1b2a41;  --halvany: #5b6b82;
+  --keret: #dde4ef;   --elsodleges: #0b4f9c;  --kiemelo: #1c7ed6;
+  --atmenet-1: #0b4f9c;  --atmenet-2: #1c7ed6;
+  --siker: #1b7a3a;
+  --arnyek: 0 2px 10px rgba(11, 79, 156, .08);
+  --sugar: 16px;
 }
-
-/* Sötét mód: a böngésző beállítását követi */
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) {   /* sötét mód: a böngésző beállítását követi */
   :root {
-    --hatter:     #0f1520;
-    --kartya:     #18212f;
-    --szoveg:     #e8eef8;
-    --halvany:    #9fb0c8;
-    --keret:      #2a3649;
-    --elsodleges: #7db4ff;
-    --kiemelo:    #4c9aff;
-    --atmenet-1:  #0a2d5c;
-    --atmenet-2:  #124e96;
-    --arnyek:     none;
+    --hatter: #0f1520;  --kartya: #18212f;  --szoveg: #e8eef8;  --halvany: #9fb0c8;
+    --keret: #2a3649;   --elsodleges: #7db4ff;  --kiemelo: #4c9aff;
+    --atmenet-1: #0a2d5c;  --atmenet-2: #124e96;  --siker: #5fd38a;  --arnyek: none;
   }
 }
 
 /* ---------- 2. ALAPOK ---------- */
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body {
-  margin: 0;
-  background: var(--hatter);
-  color: var(--szoveg);
-  font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-}
+body { margin: 0; background: var(--hatter); color: var(--szoveg);
+       font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
 a { color: inherit; text-decoration: none; }
 h2 { margin: 30px 0 14px; font-size: 22px; }
+.sav { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
 
-.sav { max-width: 1100px; margin: 0 auto; padding: 0 16px; }   /* középre igazított sáv */
-
-/* ---------- 3. FEJLÉC ---------- */
-.fejlec {
-  position: sticky; top: 0; z-index: 5;
-  background: var(--kartya);
-  border-bottom: 1px solid var(--keret);
-}
-.fejlec__sor { display: flex; align-items: center; gap: 16px; padding-top: 10px; padding-bottom: 10px; }
-
+/* ---------- 3. FEJLÉC ÉS MENÜ ---------- */
+.fejlec { position: sticky; top: 0; z-index: 5; background: var(--kartya); border-bottom: 1px solid var(--keret); }
+.fejlec__sor { display: flex; align-items: center; gap: 16px; padding-top: 10px; padding-bottom: 10px; flex-wrap: wrap; }
 .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 20px; color: var(--elsodleges); }
-.logo__jel {
-  display: grid; place-items: center;
-  width: 38px; height: 38px; border-radius: 10px;
-  background: linear-gradient(135deg, var(--atmenet-1), var(--atmenet-2));
-  color: #fff; font-size: 15px;
-}
-.logo__kep { height: 40px; width: auto; display: block; }   /* logó magassága */
+.logo__kep { height: 40px; width: auto; display: block; }                /* logó magassága */
+.logo__jel { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 10px;
+             background: linear-gradient(135deg, var(--atmenet-1), var(--atmenet-2)); color: #fff; font-size: 15px; }
 .logo small { display: block; font-size: 11px; font-weight: 500; letter-spacing: .04em; color: var(--halvany); }
-
-.kereso { flex: 1; max-width: 420px; margin-left: auto; position: relative; }
-.kereso::before { content: "🔍"; position: absolute; left: 13px; top: 8px; font-size: 15px; }
-.kereso input {
-  width: 100%; padding: 10px 14px 10px 38px;
-  border: 1px solid var(--keret); border-radius: 999px;
-  background: var(--hatter); color: var(--szoveg); font: inherit;
-}
+.menu { display: flex; gap: 4px; margin-left: auto; flex-wrap: wrap; }
+.menu a { padding: 8px 14px; border-radius: 999px; font-weight: 600; font-size: 15px; color: var(--halvany); }
+.menu a:hover { color: var(--elsodleges); }
+.menu a.aktiv { background: var(--kiemelo); color: #fff; }
 
 /* ---------- 4. BEVEZETŐ SÁV ---------- */
 .bevezeto { background: linear-gradient(120deg, var(--atmenet-1), var(--atmenet-2)); color: #fff; }
-.bevezeto .sav { padding-top: 44px; padding-bottom: 56px; }
+.bevezeto .sav { padding-top: 40px; padding-bottom: 56px; }
 .bevezeto h1 { margin: 0 0 8px; font-size: clamp(26px, 4.5vw, 40px); line-height: 1.15; }
-.bevezeto p  { margin: 0; max-width: 620px; font-size: 18px; opacity: .92; }
-
+.bevezeto p { margin: 0; max-width: 620px; font-size: 18px; opacity: .92; }
 .szamlalok { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
 .szamlalok span { padding: 6px 14px; border-radius: 999px; background: rgba(255,255,255,.16); font-weight: 600; font-size: 14px; }
+.morzsa { font-size: 14px; opacity: .9; margin-bottom: 10px; }
+.morzsa a:hover { text-decoration: underline; }
+.tartalom { margin-top: -28px; margin-bottom: 40px; }                     /* ráúszik a kék sávra */
 
-/* ---------- 5. ÉVFOLYAMVÁLASZTÓ ---------- */
-.tartalom { margin-top: -28px; margin-bottom: 40px; }   /* ráúszik a kék sávra */
-.evfolyamok {
-  display: flex; gap: 8px; overflow: auto;
-  padding: 8px; border-radius: 14px;
-  background: var(--kartya); border: 1px solid var(--keret); box-shadow: var(--arnyek);
-}
-.evfolyam { padding: 9px 18px; border-radius: 10px; font-weight: 700; white-space: nowrap; color: var(--halvany); }
-.evfolyam--aktiv  { background: var(--kiemelo); color: #fff; }
-.evfolyam--hamarosan { opacity: .5; }
+/* ---------- 5. TANKÖNYVVÁLASZTÓ SZŰRŐK ---------- */
+.szuro { display: flex; flex-wrap: wrap; gap: 12px; padding: 14px; border-radius: 14px;
+         background: var(--kartya); border: 1px solid var(--keret); box-shadow: var(--arnyek); }
+.szuro label { flex: 1; min-width: 160px; font-size: 13px; font-weight: 700; color: var(--halvany); }
+.szuro select, .szuro input { display: block; width: 100%; margin-top: 4px; padding: 10px 12px; font: inherit; font-weight: 400;
+         border: 1px solid var(--keret); border-radius: 10px; background: var(--hatter); color: var(--szoveg); }
 
-/* ---------- 6. TANTÁRGYKÁRTYÁK ---------- */
-.racs { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
-.targy {
-  padding: 18px; text-align: left; cursor: pointer;
-  font: inherit; color: inherit;
-  background: var(--kartya); border: 1px solid var(--keret);
-  border-top: 5px solid var(--szin);              /* a --szin értéket a JS állítja be */
-  border-radius: var(--sugar); box-shadow: var(--arnyek);
-  transition: transform .15s;
-}
-.targy:hover, .targy--aktiv { transform: translateY(-3px); border-color: var(--szin); }
-.targy__ikon { font-size: 34px; }
-.targy h3 { margin: 8px 0 2px; font-size: 17px; }
-.targy p  { margin: 0; font-size: 13px; color: var(--halvany); }
+/* ---------- 6. TANKÖNYVKÁRTYÁK ---------- */
+.racs { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; }
+.konyv { display: flex; flex-direction: column; padding: 18px; background: var(--kartya); border: 1px solid var(--keret);
+         border-top: 5px solid var(--szin); border-radius: var(--sugar); box-shadow: var(--arnyek); transition: transform .15s; }
+.konyv:hover { transform: translateY(-3px); border-color: var(--szin); }
+.konyv__ikon { font-size: 34px; }
+.konyv h3 { margin: 8px 0 2px; font-size: 17px; }
+.konyv p { margin: 0; font-size: 13px; color: var(--halvany); }
+.konyv__gomb { margin-top: auto; padding-top: 14px; font-weight: 700; color: var(--elsodleges); }
+.ures { padding: 14px 0; color: var(--halvany); }
 
-/* ---------- 7. FEJEZETLISTA / TALÁLATOK ---------- */
-.panel {
-  display: none; margin-top: 18px; padding: 18px;
-  background: var(--kartya); border: 1px solid var(--keret);
-  border-radius: var(--sugar); box-shadow: var(--arnyek);
-}
-.panel--lathato { display: block; }
+/* ---------- 7. TANKÖNYV NÉZET (tartalomjegyzék) ---------- */
+.panel { margin-top: 18px; padding: 18px; background: var(--kartya); border: 1px solid var(--keret);
+         border-radius: var(--sugar); box-shadow: var(--arnyek); }
 .panel h3 { margin: 0 0 12px; font-size: 20px; }
-
-.sor { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 11px 8px; border-top: 1px solid var(--keret); }
+.sor { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 12px 8px; border-top: 1px solid var(--keret); }
 .sor:first-of-type { border-top: 0; }
+.sor__szam { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%;
+             background: var(--hatter); font-weight: 700; font-size: 14px; color: var(--halvany); }
+.sor__szam--kesz { background: var(--siker); color: #fff; }
 .sor__cim { flex: 1; min-width: 180px; font-weight: 600; }
-.sor__cim small { font-weight: 400; color: var(--halvany); }
-
-.gomb { padding: 7px 14px; border-radius: 999px; border: 1px solid var(--kiemelo); color: var(--elsodleges); font-weight: 700; font-size: 14px; }
+.sor__cim small { display: block; font-weight: 400; color: var(--halvany); }
+.gomb { padding: 7px 14px; border-radius: 999px; border: 1px solid var(--kiemelo); color: var(--elsodleges); font-weight: 700; font-size: 14px; background: none; cursor: pointer; font-family: inherit; }
 .gomb--tomor { background: var(--kiemelo); color: #fff; }
 .gomb:hover { opacity: .85; }
-.ures { padding: 10px 0; color: var(--halvany); }
 
-/* ---------- 8. LÁBLÉC ---------- */
+/* ---------- 8. TÁBLÁZAT ÉS SZÖVEGES OLDALAK ---------- */
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 10px 8px; text-align: left; border-top: 1px solid var(--keret); }
+th { border-top: 0; font-size: 13px; color: var(--halvany); }
+.szoveg p, .szoveg li { max-width: 720px; }
+
+/* ---------- 9. LÁBLÉC ---------- */
 .lablec { padding: 24px 16px 40px; text-align: center; font-size: 13px; color: var(--halvany); }

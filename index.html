@@ -3,54 +3,29 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>MOT – Magyar OkosTankönyv</title>
+  <title>Kezdőlap – MOT</title>
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-
-  <!-- ===== Fejléc: logó + kereső ===== -->
-  <header class="fejlec">
-    <div class="sav fejlec__sor">
-      <a class="logo" href="./">
-        <img class="logo__kep" src="assets/img/logo.svg" alt="MOT"
-             onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
-        <span class="logo__jel" style="display:none">MOT</span>
-        <span class="logo__szoveg">Magyar OkosTankönyv<small>INTERAKTÍV TANANYAG</small></span>
-      </a>
-      <div class="kereso">
-        <input id="kereso" type="search" placeholder="Keresés a tananyagban…" autocomplete="off">
-      </div>
-    </div>
-  </header>
-
-  <!-- ===== Kék bevezető sáv ===== -->
-  <section class="bevezeto">
-    <div class="sav">
-      <h1>Tanulj okosan, gyakorolj játékosan!</h1>
-      <p>Tankönyvek fejezetekre bontva, minden témához interaktív feladatokkal.</p>
-      <div class="szamlalok" id="szamlalok"></div>
-    </div>
-  </section>
-
+  <header id="fejlec"></header>
+  <section class="bevezeto"><div class="sav">
+    <h1>Tanulj okosan, gyakorolj játékosan!</h1>
+    <p>Tankönyvek fejezetekre bontva, minden témához interaktív feladatokkal.</p>
+    <div class="szamlalok" id="szamlalok"></div>
+  </div></section>
   <main class="sav tartalom">
-    <!-- Évfolyamválasztó (a fülek az assets/js/app.js tetején állíthatók) -->
-    <nav class="evfolyamok" id="evfolyamok"></nav>
-
-    <!-- Keresési találatok (csak kereséskor látszik) -->
-    <div class="panel" id="talalatok"></div>
-
-    <!-- Tantárgykártyák és a kiválasztott tantárgy fejezetei -->
-    <h2>Tantárgyak</h2>
-    <div class="racs" id="tantargyak"></div>
-    <div class="panel" id="fejezetek"></div>
+    <!-- Tankönyvválasztó -->
+    <div class="szuro">
+      <label>Tantárgy <select id="szuro-tantargy"></select></label>
+      <label>Évfolyam <select id="szuro-evfolyam"></select></label>
+      <label>Keresés <input id="szuro-szoveg" type="search" placeholder="pl. törtek, Mátyás…"></label>
+    </div>
+    <h2>Tankönyvek</h2>
+    <div class="racs" id="konyvek"></div>
   </main>
-
-  <footer class="lablec">
-    MOT – Magyar OkosTankönyv · A tankönyvek az Oktatási Hivatal kiadványai, a feladatok saját készítésűek.
-  </footer>
-
-  <!-- Az adat külön fájlban van, így file:// alól is működik -->
-  <script src="data/tantargyak.js"></script>
-  <script src="assets/js/app.js"></script>
+  <footer id="lablec"></footer>
+  <script src="data/konyvek.js"></script>
+  <script src="assets/js/kozos.js"></script>
+  <script src="assets/js/fooldal.js"></script>
 </body>
 </html>

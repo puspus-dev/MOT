@@ -1,54 +1,54 @@
-<!doctype html><html lang="hu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MOT – Magyar OkosTankönyv</title>
-<style>
-:root{--bg:#f3f6fb;--card:#fff;--fg:#1b2a41;--mut:#5b6b82;--bd:#dde4ef;--pri:#0b4f9c;--pri2:#1c7ed6;--hero1:#0b4f9c;--hero2:#1c7ed6;--sh:0 2px 10px rgba(11,79,156,.08)}
-@media(prefers-color-scheme:dark){:root{--bg:#0f1520;--card:#18212f;--fg:#e8eef8;--mut:#9fb0c8;--bd:#2a3649;--pri:#7db4ff;--pri2:#4c9aff;--hero1:#0a2d5c;--hero2:#124e96;--sh:none}}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-a{color:inherit;text-decoration:none}
-header{background:var(--card);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:5}
-.top{max-width:1100px;margin:auto;display:flex;align-items:center;gap:16px;padding:10px 16px}
-.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;color:var(--pri)}
-.logo b{display:grid;place-items:center;width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--hero1),var(--hero2));color:#fff;font-size:15px}
-.logo small{display:block;font-weight:500;font-size:11px;color:var(--mut);letter-spacing:.04em}
-.search{flex:1;max-width:420px;margin-left:auto;position:relative}
-.search input{width:100%;padding:10px 14px 10px 38px;border:1px solid var(--bd);border-radius:999px;background:var(--bg);color:var(--fg);font:inherit}
-.search:before{content:"🔍";position:absolute;left:13px;top:8px;font-size:15px}
-.hero{background:linear-gradient(120deg,var(--hero1),var(--hero2));color:#fff}
-.hero div{max-width:1100px;margin:auto;padding:44px 16px 56px}
-.hero h1{margin:0 0 8px;font-size:clamp(26px,4.5vw,40px);line-height:1.15}.hero p{margin:0;opacity:.92;max-width:620px;font-size:18px}
-.stats{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}.stats span{background:rgba(255,255,255,.16);border-radius:999px;padding:6px 14px;font-weight:600;font-size:14px}
-main{max-width:1100px;margin:-28px auto 40px;padding:0 16px}
-.tabs{display:flex;gap:8px;background:var(--card);border-radius:14px;padding:8px;box-shadow:var(--sh);border:1px solid var(--bd);overflow:auto}
-.tab{padding:9px 18px;border-radius:10px;font-weight:700;white-space:nowrap;color:var(--mut)}.tab.on{background:var(--pri2);color:#fff}.tab.off{opacity:.5}
-h2{margin:30px 0 14px;font-size:22px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
-.sub{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:18px;cursor:pointer;box-shadow:var(--sh);transition:.15s;text-align:left;font:inherit;color:inherit;border-top:5px solid var(--c)}
-.sub:hover,.sub.on{transform:translateY(-3px);border-color:var(--c)}
-.ic{font-size:34px}.sub h3{margin:8px 0 2px;font-size:17px}.sub p{margin:0;color:var(--mut);font-size:13px}
-.panel{background:var(--card);border:1px solid var(--bd);border-radius:16px;margin-top:18px;padding:18px;box-shadow:var(--sh);display:none}.panel.on{display:block}
-.panel h3{margin:0 0 12px;font-size:20px}
-.row{display:flex;align-items:center;gap:10px;padding:11px 8px;border-top:1px solid var(--bd);flex-wrap:wrap}.row:first-of-type{border-top:0}
-.row .n{flex:1;min-width:180px;font-weight:600}.row small{color:var(--mut);font-weight:400}
-.btn{padding:7px 14px;border-radius:999px;font-weight:700;font-size:14px;border:1px solid var(--pri2);color:var(--pri)}.btn.f{background:var(--pri2);color:#fff}
-.btn:hover{opacity:.85}.empty{color:var(--mut);padding:10px 0}
-footer{text-align:center;color:var(--mut);font-size:13px;padding:24px 16px 40px}
-</style></head><body>
-<header><div class="top"><a class="logo" href="./"><b>MOT</b><span>Magyar OkosTankönyv<small>INTERAKTÍV TANANYAG</small></span></a>
-<div class="search"><input id="q" type="search" placeholder="Keresés a tananyagban…" autocomplete="off"></div></div></header>
-<section class="hero"><div><h1>Tanulj okosan, gyakorolj játékosan!</h1><p>Tankönyvek fejezetekre bontva, minden témához interaktív feladatokkal.</p><div class="stats" id="st"></div></div></section>
-<main>
-<nav class="tabs"><a class="tab off">5. osztály</a><a class="tab on">6. osztály</a><a class="tab off">7. osztály</a><a class="tab off">8. osztály</a></nav>
-<div id="res" class="panel"></div>
-<h2>Tantárgyak</h2><div class="grid" id="g"></div><div class="panel" id="p"></div>
-</main><footer>MOT – Magyar OkosTankönyv · A tankönyvek az Oktatási Hivatal kiadványai, a feladatok saját készítésűek.</footer>
-<script>
-const D=[{"t": "Magyar nyelv", "i": "📝", "c": "#d6336c", "u": [{"n": "Tanuljunk tanulni", "p": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/01_Tanuljunk_tanulni/01_Tanuljunk_tanulni.pdf", "h": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/01_Tanuljunk_tanulni/feladatok.html", "pg": "9–15. oldal"}, {"n": "A kommunikacio vilaga", "p": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/02_A_kommunikacio_vilaga/02_A_kommunikacio_vilaga.pdf", "h": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/02_A_kommunikacio_vilaga/feladatok.html", "pg": "16–39. oldal"}, {"n": "Szofajok I az ige", "p": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/03_Szofajok_I_az_ige/03_Szofajok_I_az_ige.pdf", "h": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/03_Szofajok_I_az_ige/feladatok.html", "pg": "40–57. oldal"}, {"n": "Szofajok II nevszok hatarozoszo", "p": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/04_Szofajok_II_nevszok_hatarozoszo/04_Szofajok_II_nevszok_hatarozoszo.pdf", "h": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/04_Szofajok_II_nevszok_hatarozoszo/feladatok.html", "pg": "58–99. oldal"}, {"n": "Szofajok III nevmasok igenevek", "p": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/05_Szofajok_III_nevmasok_igenevek/05_Szofajok_III_nevmasok_igenevek.pdf", "h": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/05_Szofajok_III_nevmasok_igenevek/feladatok.html", "pg": "100–123. oldal"}, {"n": "Szofajok IV viszonyszok mondatszok", "p": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/06_Szofajok_IV_viszonyszok_mondatszok/06_Szofajok_IV_viszonyszok_mondatszok.pdf", "h": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/06_Szofajok_IV_viszonyszok_mondatszok/feladatok.html", "pg": "124–139. oldal"}, {"n": "Szofajok V szofaji rendszer", "p": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/07_Szofajok_V_szofaji_rendszer/07_Szofajok_V_szofaji_rendszer.pdf", "h": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/07_Szofajok_V_szofaji_rendszer/feladatok.html", "pg": "140–147. oldal"}, {"n": "Fogalomtar", "p": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/08_Fogalomtar/08_Fogalomtar.pdf", "h": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/08_Fogalomtar/feladatok.html", "pg": "148–153. oldal"}]}, {"t": "Irodalom", "i": "📖", "c": "#7048e8", "u": [{"n": "Hosok", "p": "6.osztaly/02_Irodalom_OH-MIR06TB/01_Hosok/01_Hosok.pdf", "h": "6.osztaly/02_Irodalom_OH-MIR06TB/01_Hosok/feladatok.html", "pg": "2–79. oldal"}, {"n": "Toldi", "p": "6.osztaly/02_Irodalom_OH-MIR06TB/02_Toldi/02_Toldi.pdf", "h": "6.osztaly/02_Irodalom_OH-MIR06TB/02_Toldi/feladatok.html", "pg": "80–175. oldal"}, {"n": "Szeretet", "p": "6.osztaly/02_Irodalom_OH-MIR06TB/03_Szeretet/03_Szeretet.pdf", "h": "6.osztaly/02_Irodalom_OH-MIR06TB/03_Szeretet/feladatok.html", "pg": "176–197. oldal"}, {"n": "Egri csillagok", "p": "6.osztaly/02_Irodalom_OH-MIR06TB/04_Egri_csillagok/04_Egri_csillagok.pdf", "h": "6.osztaly/02_Irodalom_OH-MIR06TB/04_Egri_csillagok/feladatok.html", "pg": "198–227. oldal"}, {"n": "Regenyek", "p": "6.osztaly/02_Irodalom_OH-MIR06TB/05_Regenyek/05_Regenyek.pdf", "h": "6.osztaly/02_Irodalom_OH-MIR06TB/05_Regenyek/feladatok.html", "pg": "228–257. oldal"}]}, {"t": "Matematika tankönyv", "i": "➗", "c": "#1c7ed6", "u": [{"n": "Egesz szamok oszthatosag", "p": "6.osztaly/03_Matematika_tankonyv_OH-MAT06TA/01_Egesz_szamok_oszthatosag/01_Egesz_szamok_oszthatosag.pdf", "h": "6.osztaly/03_Matematika_tankonyv_OH-MAT06TA/01_Egesz_szamok_oszthatosag/feladatok.html", "pg": "9–54. oldal"}, {"n": "Tortek", "p": "6.osztaly/03_Matematika_tankonyv_OH-MAT06TA/02_Tortek/02_Tortek.pdf", "h": "6.osztaly/03_Matematika_tankonyv_OH-MAT06TA/02_Tortek/feladatok.html", "pg": "55–84. oldal"}, {"n": "Geometria tengelyes tukrozes", "p": "6.osztaly/03_Matematika_tankonyv_OH-MAT06TA/03_Geometria_tengelyes_tukrozes/03_Geometria_tengelyes_tukrozes.pdf", "h": "6.osztaly/03_Matematika_tankonyv_OH-MAT06TA/03_Geometria_tengelyes_tukrozes/feladatok.html", "pg": "85–122. oldal"}, {"n": "Arany szazalek szoveges", "p": "6.osztaly/03_Matematika_tankonyv_OH-MAT06TA/04_Arany_szazalek_szoveges/04_Arany_szazalek_szoveges.pdf", "h": "6.osztaly/03_Matematika_tankonyv_OH-MAT06TA/04_Arany_szazalek_szoveges/feladatok.html", "pg": "123–172. oldal"}, {"n": "Kerulet terulet felszin terfogat", "p": "6.osztaly/03_Matematika_tankonyv_OH-MAT06TA/05_Kerulet_terulet_felszin_terfogat/05_Kerulet_terulet_felszin_terfogat.pdf", "h": "6.osztaly/03_Matematika_tankonyv_OH-MAT06TA/05_Kerulet_terulet_felszin_terfogat/feladatok.html", "pg": "173–202. oldal"}, {"n": "Statisztika", "p": "6.osztaly/03_Matematika_tankonyv_OH-MAT06TA/06_Statisztika/06_Statisztika.pdf", "h": "6.osztaly/03_Matematika_tankonyv_OH-MAT06TA/06_Statisztika/feladatok.html", "pg": "203–225. oldal"}]}, {"t": "Matematika munkafüzet", "i": "✏️", "c": "#0c8599", "u": [{"n": "Egesz szamok oszthatosag", "p": "6.osztaly/04_Matematika_munkafuzet_OH-MAT06MA/01_Egesz_szamok_oszthatosag/01_Egesz_szamok_oszthatosag.pdf", "h": "6.osztaly/04_Matematika_munkafuzet_OH-MAT06MA/01_Egesz_szamok_oszthatosag/feladatok.html", "pg": "9–35. oldal"}, {"n": "Tortek", "p": "6.osztaly/04_Matematika_munkafuzet_OH-MAT06MA/02_Tortek/02_Tortek.pdf", "h": "6.osztaly/04_Matematika_munkafuzet_OH-MAT06MA/02_Tortek/feladatok.html", "pg": "36–54. oldal"}, {"n": "Geometria tengelyes tukrozes", "p": "6.osztaly/04_Matematika_munkafuzet_OH-MAT06MA/03_Geometria_tengelyes_tukrozes/03_Geometria_tengelyes_tukrozes.pdf", "h": "6.osztaly/04_Matematika_munkafuzet_OH-MAT06MA/03_Geometria_tengelyes_tukrozes/feladatok.html", "pg": "55–79. oldal"}, {"n": "Arany szazalek szoveges", "p": "6.osztaly/04_Matematika_munkafuzet_OH-MAT06MA/04_Arany_szazalek_szoveges/04_Arany_szazalek_szoveges.pdf", "h": "6.osztaly/04_Matematika_munkafuzet_OH-MAT06MA/04_Arany_szazalek_szoveges/feladatok.html", "pg": "80–106. oldal"}, {"n": "Kerulet terulet felszin terfogat", "p": "6.osztaly/04_Matematika_munkafuzet_OH-MAT06MA/05_Kerulet_terulet_felszin_terfogat/05_Kerulet_terulet_felszin_terfogat.pdf", "h": "6.osztaly/04_Matematika_munkafuzet_OH-MAT06MA/05_Kerulet_terulet_felszin_terfogat/feladatok.html", "pg": "107–125. oldal"}, {"n": "Statisztika", "p": "6.osztaly/04_Matematika_munkafuzet_OH-MAT06MA/06_Statisztika/06_Statisztika.pdf", "h": "6.osztaly/04_Matematika_munkafuzet_OH-MAT06MA/06_Statisztika/feladatok.html", "pg": "126–137. oldal"}, {"n": "Mindennapi penzugyeink", "p": "6.osztaly/04_Matematika_munkafuzet_OH-MAT06MA/07_Mindennapi_penzugyeink/07_Mindennapi_penzugyeink.pdf", "h": "6.osztaly/04_Matematika_munkafuzet_OH-MAT06MA/07_Mindennapi_penzugyeink/feladatok.html", "pg": "138–145. oldal"}]}, {"t": "Angol", "i": "🇬🇧", "c": "#e8590c", "u": [{"n": "Gyakorló feladatok", "p": null, "h": "6.osztaly/05_Angol_Get_to_the_top_plus_2/feladatok.html"}]}, {"t": "Történelem", "i": "🏰", "c": "#a0522d", "u": [{"n": "Magyar kiralyportrek", "p": "6.osztaly/06_Tortenelem_OH-TOR06TB/01_Magyar_kiralyportrek/01_Magyar_kiralyportrek.pdf", "h": "6.osztaly/06_Tortenelem_OH-TOR06TB/01_Magyar_kiralyportrek/feladatok.html", "pg": "9–16. oldal"}, {"n": "Hunyadi Janos", "p": "6.osztaly/06_Tortenelem_OH-TOR06TB/02_Hunyadi_Janos/02_Hunyadi_Janos.pdf", "h": "6.osztaly/06_Tortenelem_OH-TOR06TB/02_Hunyadi_Janos/feladatok.html", "pg": "17–20. oldal"}, {"n": "Hunyadi Matyas", "p": "6.osztaly/06_Tortenelem_OH-TOR06TB/03_Hunyadi_Matyas/03_Hunyadi_Matyas.pdf", "h": "6.osztaly/06_Tortenelem_OH-TOR06TB/03_Hunyadi_Matyas/feladatok.html", "pg": "21–30. oldal"}, {"n": "Foldrajzi felfedezesek", "p": "6.osztaly/06_Tortenelem_OH-TOR06TB/04_Foldrajzi_felfedezesek/04_Foldrajzi_felfedezesek.pdf", "h": "6.osztaly/06_Tortenelem_OH-TOR06TB/04_Foldrajzi_felfedezesek/feladatok.html", "pg": "31–35. oldal"}, {"n": "Korai kapitalizmus", "p": "6.osztaly/06_Tortenelem_OH-TOR06TB/05_Korai_kapitalizmus/05_Korai_kapitalizmus.pdf", "h": "6.osztaly/06_Tortenelem_OH-TOR06TB/05_Korai_kapitalizmus/feladatok.html", "pg": "36–38. oldal"}, {"n": "Vallasi megujulas", "p": "6.osztaly/06_Tortenelem_OH-TOR06TB/06_Vallasi_megujulas/06_Vallasi_megujulas.pdf", "h": "6.osztaly/06_Tortenelem_OH-TOR06TB/06_Vallasi_megujulas/feladatok.html", "pg": "39–47. oldal"}, {"n": "Uj vilagkep", "p": "6.osztaly/06_Tortenelem_OH-TOR06TB/07_Uj_vilagkep/07_Uj_vilagkep.pdf", "h": "6.osztaly/06_Tortenelem_OH-TOR06TB/07_Uj_vilagkep/feladatok.html", "pg": "48–56. oldal"}, {"n": "A torok haboruk hosei", "p": "6.osztaly/06_Tortenelem_OH-TOR06TB/08_A_torok_haboruk_hosei/08_A_torok_haboruk_hosei.pdf", "h": "6.osztaly/06_Tortenelem_OH-TOR06TB/08_A_torok_haboruk_hosei/feladatok.html", "pg": "57–64. oldal"}, {"n": "Bocskai Bethlen Zrinyi", "p": "6.osztaly/06_Tortenelem_OH-TOR06TB/09_Bocskai_Bethlen_Zrinyi/09_Bocskai_Bethlen_Zrinyi.pdf", "h": "6.osztaly/06_Tortenelem_OH-TOR06TB/09_Bocskai_Bethlen_Zrinyi/feladatok.html", "pg": "65–73. oldal"}, {"n": "II Rakoczi Ferenc", "p": "6.osztaly/06_Tortenelem_OH-TOR06TB/10_II_Rakoczi_Ferenc/10_II_Rakoczi_Ferenc.pdf", "h": "6.osztaly/06_Tortenelem_OH-TOR06TB/10_II_Rakoczi_Ferenc/feladatok.html", "pg": "74–80. oldal"}, {"n": "Maria Terezia", "p": "6.osztaly/06_Tortenelem_OH-TOR06TB/11_Maria_Terezia/11_Maria_Terezia.pdf", "h": "6.osztaly/06_Tortenelem_OH-TOR06TB/11_Maria_Terezia/feladatok.html", "pg": "81–88. oldal"}, {"n": "Elet a torok hodoltsag koraban", "p": "6.osztaly/06_Tortenelem_OH-TOR06TB/12_Elet_a_torok_hodoltsag_koraban/12_Elet_a_torok_hodoltsag_koraban.pdf", "h": "6.osztaly/06_Tortenelem_OH-TOR06TB/12_Elet_a_torok_hodoltsag_koraban/feladatok.html", "pg": "89–95. oldal"}, {"n": "Elet a XVIII szazadban", "p": "6.osztaly/06_Tortenelem_OH-TOR06TB/13_Elet_a_XVIII_szazadban/13_Elet_a_XVIII_szazadban.pdf", "h": "6.osztaly/06_Tortenelem_OH-TOR06TB/13_Elet_a_XVIII_szazadban/feladatok.html", "pg": "96–100. oldal"}, {"n": "Ipari forradalom", "p": "6.osztaly/06_Tortenelem_OH-TOR06TB/14_Ipari_forradalom/14_Ipari_forradalom.pdf", "h": "6.osztaly/06_Tortenelem_OH-TOR06TB/14_Ipari_forradalom/feladatok.html", "pg": "101–109. oldal"}, {"n": "Tarsadalmi politikai forradalom", "p": "6.osztaly/06_Tortenelem_OH-TOR06TB/15_Tarsadalmi_politikai_forradalom/15_Tarsadalmi_politikai_forradalom.pdf", "h": "6.osztaly/06_Tortenelem_OH-TOR06TB/15_Tarsadalmi_politikai_forradalom/feladatok.html", "pg": "110–118. oldal"}, {"n": "A reformkor", "p": "6.osztaly/06_Tortenelem_OH-TOR06TB/16_A_reformkor/16_A_reformkor.pdf", "h": "6.osztaly/06_Tortenelem_OH-TOR06TB/16_A_reformkor/feladatok.html", "pg": "119–132. oldal"}, {"n": "A forradalom", "p": "6.osztaly/06_Tortenelem_OH-TOR06TB/17_A_forradalom/17_A_forradalom.pdf", "h": "6.osztaly/06_Tortenelem_OH-TOR06TB/17_A_forradalom/feladatok.html", "pg": "133–141. oldal"}, {"n": "A szabadsagharc", "p": "6.osztaly/06_Tortenelem_OH-TOR06TB/18_A_szabadsagharc/18_A_szabadsagharc.pdf", "h": "6.osztaly/06_Tortenelem_OH-TOR06TB/18_A_szabadsagharc/feladatok.html", "pg": "142–153. oldal"}, {"n": "A kiegyezes", "p": "6.osztaly/06_Tortenelem_OH-TOR06TB/19_A_kiegyezes/19_A_kiegyezes.pdf", "h": "6.osztaly/06_Tortenelem_OH-TOR06TB/19_A_kiegyezes/feladatok.html", "pg": "154–161. oldal"}, {"n": "Kislexikon es forrasok", "p": "6.osztaly/06_Tortenelem_OH-TOR06TB/20_Kislexikon_es_forrasok/20_Kislexikon_es_forrasok.pdf", "h": "6.osztaly/06_Tortenelem_OH-TOR06TB/20_Kislexikon_es_forrasok/feladatok.html", "pg": "162–169. oldal"}]}, {"t": "Ének-zene", "i": "🎵", "c": "#2f9e44", "u": [{"n": "A nepzene vilaga", "p": "6.osztaly/07_Enek_OH-ENZ06TA/01_A_nepzene_vilaga/01_A_nepzene_vilaga.pdf", "h": "6.osztaly/07_Enek_OH-ENZ06TA/01_A_nepzene_vilaga/feladatok.html", "pg": "6–59. oldal"}, {"n": "Barangolas a zenetortenetben", "p": "6.osztaly/07_Enek_OH-ENZ06TA/02_Barangolas_a_zenetortenetben/02_Barangolas_a_zenetortenetben.pdf", "h": "6.osztaly/07_Enek_OH-ENZ06TA/02_Barangolas_a_zenetortenetben/feladatok.html", "pg": "60–93. oldal"}]}, {"t": "Hittan – római katolikus", "i": "✝️", "c": "#5f3dc4", "u": [{"n": "Gyakorló feladatok", "p": null, "h": "6.osztaly/08_Hittan_romai_katolikus_A_sziklara_epult_egyhaz/feladatok.html"}]}, {"t": "Hittan – református", "i": "✝️", "c": "#364fc7", "u": [{"n": "Gyakorló feladatok", "p": null, "h": "6.osztaly/09_Hittan_reformatus_Isten_vilagossagaban/feladatok.html"}]}, {"t": "Hittan – görög katolikus", "i": "✝️", "c": "#862e9c", "u": [{"n": "Gyakorló feladatok", "p": null, "h": "6.osztaly/10_Hittan_gorog_katolikus_Velunk_az_Isten/feladatok.html"}]}];const $=s=>document.querySelector(s);
-const n=D.reduce((a,b)=>a+b.u.length,0),pdf=D.reduce((a,b)=>a+b.u.filter(x=>x.p).length,0);
-$('#st').innerHTML=`<span>📚 ${D.length} tantárgy</span><span>📖 ${pdf} tananyag-PDF</span><span>✏️ ${n} feladatsor</span>`;
-const row=x=>`<div class="row"><div class="n">${x.n}${x.pg?` <small>· ${x.pg}</small>`:''}</div>${x.p?`<a class="btn" href="${x.p}">📄 Tananyag</a>`:''}<a class="btn f" href="${x.h}">▶ Feladatok</a></div>`;
-$('#g').innerHTML=D.map((b,i)=>`<button class="sub" style="--c:${b.c}" data-i="${i}"><div class="ic">${b.i}</div><h3>${b.t}</h3><p>${b.u.length} fejezet / feladatsor</p></button>`).join('');
-document.querySelectorAll('.sub').forEach(e=>e.onclick=()=>{const b=D[e.dataset.i];const on=e.classList.contains('on');document.querySelectorAll('.sub').forEach(x=>x.classList.remove('on'));const p=$('#p');
-if(on){p.classList.remove('on');return}e.classList.add('on');p.innerHTML=`<h3>${b.i} ${b.t}</h3>`+b.u.map(row).join('');p.classList.add('on');p.scrollIntoView({block:'nearest',behavior:'smooth'})});
-$('#q').oninput=e=>{const v=e.target.value.trim().toLowerCase(),r=$('#res');if(v.length<2){r.classList.remove('on');return}
-const m=[];D.forEach(b=>b.u.forEach(x=>{if((x.n+' '+b.t).toLowerCase().includes(v))m.push({...x,n:b.i+' '+b.t+' – '+x.n})}));
-r.innerHTML=`<h3>Találatok (${m.length})</h3>`+(m.length?m.map(row).join(''):'<div class="empty">Nincs találat.</div>');r.classList.add('on')};
-</script></body></html>
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>MOT – Magyar OkosTankönyv</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+  <!-- ===== Fejléc: logó + kereső ===== -->
+  <header class="fejlec">
+    <div class="sav fejlec__sor">
+      <a class="logo" href="./">
+        <span class="logo">MOT</span>
+        <span class="logo__szoveg">Magyar OkosTankönyv<small>INTERAKTÍV TANANYAG</small></span>
+      </a>
+      <div class="kereso">
+        <input id="kereso" type="search" placeholder="Keresés a tananyagban…" autocomplete="off">
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== Kék bevezető sáv ===== -->
+  <section class="bevezeto">
+    <div class="sav">
+      <h1>Tanulj okosan, gyakorolj játékosan!</h1>
+      <p>Tankönyvek fejezetekre bontva, minden témához interaktív feladatokkal.</p>
+      <div class="szamlalok" id="szamlalok"></div>
+    </div>
+  </section>
+
+  <main class="sav tartalom">
+    <!-- Évfolyamválasztó (a fülek az assets/js/app.js tetején állíthatók) -->
+    <nav class="evfolyamok" id="evfolyamok"></nav>
+
+    <!-- Keresési találatok (csak kereséskor látszik) -->
+    <div class="panel" id="talalatok"></div>
+
+    <!-- Tantárgykártyák és a kiválasztott tantárgy fejezetei -->
+    <h2>Tantárgyak</h2>
+    <div class="racs" id="tantargyak"></div>
+    <div class="panel" id="fejezetek"></div>
+  </main>
+
+  <footer class="lablec">
+    MOT – Magyar OkosTankönyv · A tankönyvek az Oktatási Hivatal kiadványai, a feladatok saját készítésűek.
+  </footer>
+
+  <!-- Az adat külön fájlban van, így file:// alól is működik -->
+  <script src="data/tantargyak.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

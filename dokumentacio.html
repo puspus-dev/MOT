@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Fejlesztői dokumentáció – MOT</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <header id="fejlec"></header>
+  <section class="bevezeto"><div class="sav"><h1>Fejlesztői dokumentáció</h1><p>Adatformátumok, URL-paraméterek és függvények a MOT bővítéséhez.</p></div></section>  <main class="sav tartalom"><div class="panel dok szoveg"><p>A MOT egy <strong>statikus weboldal</strong>: nincs szerver és adatbázis, minden fájl a böngészőben fut. Az „API" itt azokat a <strong>adatformátumokat, URL-paramétereket és JavaScript-függvényeket</strong> jelenti, amelyekkel az oldal bővíthető. A dokumentáció a jelenlegi állapotot írja le; a végén egy külön, <strong>még meg nem valósított</strong> szerveroldali terv is szerepel.</p>
+<h2>1. Fájlszerkezet</h2>
+<pre><code>index.html            Kezdőlap: tankönyvválasztó (szűrők + kártyák)
+konyv.html            Tankönyv nézet: tartalomjegyzék
+diagram.html          Fogalomtérképek (mxGraph)
+elozmenyek.html       Megoldott feladatsorok
+segitseg.html, impresszum.html, dokumentacio.html
+data/konyvek.js       Tankönyvek és fejezetek (MOT_KONYVEK)
+data/diagramok.js     Fogalomtérképek (MOT_DIAGRAMOK)
+assets/css/style.css  Közös stíluslap (színek az 1. blokkban)
+assets/js/            kozos.js, fooldal.js, konyv.js, diagram.js, elozmenyek.js
+assets/vendor/mxgraph Harmadik féltől: mxGraph (Apache 2.0)
+6.osztaly/&lt;tankonyv&gt;/ PDF-ek, okostankonyv.html, fejezetenként feladatok.html
+</code></pre>
+<h2>2. URL-paraméterek</h2>
+<table>
+<thead>
+<tr>
+<th>URL</th>
+<th>Jelentés</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>konyv.html?id=&lt;könyv-id&gt;</code></td>
+<td>Egy tankönyv tartalomjegyzéke. Ismeretlen id esetén hibaüzenet.</td>
+</tr>
+<tr>
+<td><code>diagram.html</code></td>
+<td>A fogalomtérképek listája.</td>
+</tr>
+<tr>
+<td><code>diagram.html?id=&lt;diagram-id&gt;</code></td>
+<td>Egy fogalomtérkép megjelenítése.</td>
+</tr>
+<tr>
+<td><code>6.osztaly/&lt;könyv&gt;/okostankonyv.html#oldal-&lt;N&gt;</code></td>
+<td>Az okostankönyv N. oldalára ugrik (N = PDF-oldalszám).</td>
+</tr>
+</tbody>
+</table>
+<h2>3. Tankönyvek: <code>data/konyvek.js</code></h2>
+<p>A fájl egy <code>MOT_KONYVEK</code> nevű tömböt definiál. Egy elem:</p>
+<table>
+<thead>
+<tr>
+<th>Mező</th>
+<th>Típus</th>
+<th>Kötelező</th>
+<th>Leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>string</td>
+<td>igen</td>
+<td>Egyedi azonosító; megegyezik a mappa nevével (pl. <code>06_Tortenelem_OH-TOR06TB</code>).</td>
+</tr>
+<tr>
+<td><code>cim</code></td>
+<td>string</td>
+<td>igen</td>
+<td>A tankönyv neve.</td>
+</tr>
+<tr>
+<td><code>tantargy</code></td>
+<td>string</td>
+<td>igen</td>
+<td>A tantárgyszűrő értéke (pl. <code>Történelem</code>).</td>
+</tr>
+<tr>
+<td><code>evfolyam</code></td>
+<td>string</td>
+<td>igen</td>
+<td>Az évfolyamszűrő értéke (pl. <code>6. osztály</code>).</td>
+</tr>
+<tr>
+<td><code>ikon</code>, <code>szin</code></td>
+<td>string</td>
+<td>igen</td>
+<td>Emoji és hex színkód a kártyához.</td>
+</tr>
+<tr>
+<td><code>okostankonyv</code></td>
+<td>string | null</td>
+<td>nem</td>
+<td>A teljes HTML-tankönyv útvonala.</td>
+</tr>
+<tr>
+<td><code>fejezetek</code></td>
+<td>tömb</td>
+<td>igen</td>
+<td>Lásd lent.</td>
+</tr>
+</tbody>
+</table>
+<p>Egy <strong>fejezet</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Mező</th>
+<th>Típus</th>
+<th>Leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cim</code></td>
+<td>string</td>
+<td>A fejezet neve.</td>
+</tr>
+<tr>
+<td><code>pdf</code></td>
+<td>string | null</td>
+<td>A fejezetre vágott PDF útvonala.</td>
+</tr>
+<tr>
+<td><code>feladat</code></td>
+<td>string</td>
+<td>A <code>feladatok.html</code> útvonala. Ez az <strong>eredménytár kulcsa</strong> is (lásd 5.).</td>
+</tr>
+<tr>
+<td><code>oldalak</code></td>
+<td>string</td>
+<td>Megjelenített szöveg, pl. <code>PDF 9–15. oldal</code>.</td>
+</tr>
+<tr>
+<td><code>elso_oldal</code></td>
+<td>number</td>
+<td>A fejezet első PDF-oldala; ide ugrik az okostankönyv-gomb.</td>
+</tr>
+</tbody>
+</table>
+<h2>4. Feladatsorok: a <code>feladatok.html</code> kérdésformátuma</h2>
+<p>Minden feladatsor oldalán egy <code>const D = [...]</code> tömb tartalmazza a kérdéseket. Három típus van:</p>
+<pre><code class="language-json">{ &quot;t&quot;: &quot;c&quot;, &quot;q&quot;: &quot;Kérdés?&quot;, &quot;o&quot;: [&quot;helyes&quot;, &quot;rossz1&quot;, &quot;rossz2&quot;], &quot;a&quot;: 0 }
+{ &quot;t&quot;: &quot;f&quot;, &quot;q&quot;: &quot;Kérdés?&quot;, &quot;a&quot;: [&quot;helyes válasz&quot;, &quot;elfogadott másik alak&quot;] }
+{ &quot;t&quot;: &quot;m&quot;, &quot;q&quot;: &quot;Párosítsd!&quot;, &quot;p&quot;: [[&quot;bal1&quot;, &quot;jobb1&quot;], [&quot;bal2&quot;, &quot;jobb2&quot;]] }
+</code></pre>
+<ul>
+<li><strong><code>c</code> – feleletválasztós</strong>: <code>o</code> a válaszlista, <code>a</code> a helyes elem <strong>indexe</strong>. A sorrendet az oldal betöltéskor véletlenszerűen keveri.</li>
+<li><strong><code>f</code> – beírós</strong>: <code>a</code> az elfogadott válaszok listája. Az összehasonlításnál a kis- és nagybetű, a szóközök és a tizedesvessző/pont különbsége nem számít.</li>
+<li><strong><code>m</code> – párosítás</strong>: <code>p</code> a (bal, jobb) párok listája. A jobb oldali értékek legördülő menüből választhatók; a kérdés akkor számít jónak, ha minden pár helyes.</li>
+</ul>
+<p>Egy kérdés 1 pontot ér. A feladatsor végén az oldal kiírja az eredményt, és elmenti (lásd 5.).</p>
+<h2>5. Eredménytár (localStorage)</h2>
+<p>Kulcs: <code>mot_eredmenyek</code>. Érték: JSON objektum, amelynek kulcsa a feladatsor <code>feladat</code> útvonala:</p>
+<pre><code class="language-json">{
+  &quot;6.osztaly/03_.../01_Egesz_szamok_oszthatosag/feladatok.html&quot;: {
+    &quot;cim&quot;: &quot;Matematika tankönyv – Egesz szamok oszthatosag&quot;,
+    &quot;pont&quot;: 5, &quot;max&quot;: 8, &quot;legjobb&quot;: 6, &quot;ido&quot;: 1760680000000
+  }
+}
+</code></pre>
+<p><code>ido</code> ezredmásodperces időbélyeg. Az adat csak a felhasználó böngészőjében van, nem kerül szerverre. Törlése: <strong>Előzmények → Eredmények törlése</strong>.</p>
+<h2>6. JavaScript-függvények (<code>assets/js/kozos.js</code>)</h2>
+<table>
+<thead>
+<tr>
+<th>Függvény</th>
+<th>Leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>oldalKeret(aktiv)</code></td>
+<td>Kirajzolja a fejlécet, menüt és láblécet; <code>aktiv</code> az aktuális menüpont fájlneve. Az oldalnak tartalmaznia kell a <code>#fejlec</code> és <code>#lablec</code> elemet.</td>
+</tr>
+<tr>
+<td><code>eredmenyek()</code></td>
+<td>Visszaadja az eredménytárat objektumként (hiba esetén <code>{}</code>).</td>
+</tr>
+<tr>
+<td><code>eredmenyekTorol()</code></td>
+<td>Törli az eredménytárat.</td>
+</tr>
+<tr>
+<td><code>$(valaszto)</code></td>
+<td><code>document.querySelector</code> rövidítése.</td>
+</tr>
+<tr>
+<td><code>MENU</code>, <code>LOGO_FAJL</code></td>
+<td>Beállítások: menüpontok, logó útvonala (<code>assets/img/logo.png</code>).</td>
+</tr>
+</tbody>
+</table>
+<h2>7. Fogalomtérképek (mxGraph): <code>data/diagramok.js</code></h2>
+<p>A <code>MOT_DIAGRAMOK</code> tömb egy eleme:</p>
+<table>
+<thead>
+<tr>
+<th>Mező</th>
+<th>Leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>Egyedi azonosító (<code>diagram.html?id=…</code>).</td>
+</tr>
+<tr>
+<td><code>cim</code></td>
+<td>A diagram címe.</td>
+</tr>
+<tr>
+<td><code>konyv</code></td>
+<td>A kapcsolódó tankönyv <code>id</code>-ja (a tankönyv nézetből erre linkelünk).</td>
+</tr>
+<tr>
+<td><code>xml</code></td>
+<td>Az ábra <code>mxGraphModel</code> XML-je.</td>
+</tr>
+<tr>
+<td><code>leiras</code></td>
+<td>Objektum: csomópont-<code>id</code> → magyarázat; kattintásra jelenik meg az ábra alatt.</td>
+</tr>
+</tbody>
+</table>
+<p>Az XML-t kézzel vagy a <a href="https://www.drawio.com/">draw.io</a> szerkesztővel is elő lehet állítani (<em>Extras → Edit Diagram</em>). A megjelenítő (<code>diagram.js</code>) <strong>csak olvasható</strong>: a csomópontok nem mozgathatók, az ábra húzással görgethető. Az mxGraph 4.2.2-es verziója van beépítve; a projekt fejlesztése megszűnt, az utódja a <a href="https://github.com/maxGraph/maxGraph">maxGraph</a>.</p>
+<h2>8. Új tartalom hozzáadása</h2>
+<ol>
+<li><strong>Új fejezet:</strong> tedd a PDF-et és a <code>feladatok.html</code>-t a tankönyv mappájába, majd vegyél fel egy blokkot a <code>fejezetek</code> listába (<code>data/konyvek.js</code>).</li>
+<li><strong>Új tankönyv:</strong> vegyél fel egy új elemet a <code>MOT_KONYVEK</code> tömbbe, és hozz létre hozzá mappát a <code>6.osztaly/</code> alatt.</li>
+<li><strong>Új évfolyam:</strong> írd be az <code>evfolyam</code> mezőbe az új értéket (pl. <code>7. osztály</code>), a Kezdőlap szűrője automatikusan felveszi.</li>
+<li><strong>Új fogalomtérkép:</strong> másolj egy blokkot a <code>data/diagramok.js</code>-ben.</li>
+<li><strong>Új kérdés:</strong> szerkeszd a megfelelő <code>feladatok.html</code> <code>const D = [...]</code> tömbjét a 4. fejezet formátuma szerint.</li>
+</ol>
+<h2>9. Licencek</h2>
+<ul>
+<li><strong>mxGraph</strong> – Apache License 2.0 (<code>assets/vendor/mxgraph/LICENSE</code>).</li>
+<li><strong>Tankönyvek</strong> – az Oktatási Hivatal kiadványai; a felhasználásra vonatkozó jogosultságot az üzemeltető vállalja.</li>
+<li><strong>Feladatok, kód</strong> – saját készítésű.</li>
+</ul>
+<h2>10. Terv: szerveroldali API (nincs megvalósítva)</h2>
+<p>Ha a MOT később szervert kap (pl. bejelentkezés, osztályszintű eredmények), a jelenlegi adatmodellre ez a REST-felület illeszkedne. <strong>Ez csak javaslat, jelenleg ilyen végpont nem létezik.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Végpont</th>
+<th>Leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET /api/konyvek?tantargy=&amp;evfolyam=</code></td>
+<td>A <code>MOT_KONYVEK</code> szűrt listája.</td>
+</tr>
+<tr>
+<td><code>GET /api/konyvek/{id}</code></td>
+<td>Egy tankönyv fejezetekkel.</td>
+</tr>
+<tr>
+<td><code>GET /api/feladatok/{feladat-id}</code></td>
+<td>Egy feladatsor kérdései (a 4. fejezet formátumában).</td>
+</tr>
+<tr>
+<td><code>POST /api/eredmenyek</code></td>
+<td>Egy eredmény mentése: <code>{ "feladat": "...", "pont": 5, "max": 8 }</code>.</td>
+</tr>
+<tr>
+<td><code>GET /api/eredmenyek</code></td>
+<td>A bejelentkezett felhasználó eredményei.</td>
+</tr>
+</tbody>
+</table></div></main>
+  <footer id="lablec"></footer>
+  <script src="assets/js/kozos.js"></script>
+  <script>oldalKeret("dokumentacio.html");</script>
+</body>
+</html>

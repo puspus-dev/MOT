@@ -8,7 +8,7 @@ const MENU = [
   { fel: "index.html",       nev: "Kezdőlap" },
   { fel: "elozmenyek.html",  nev: "Előzmények" },
   { fel: "segitseg.html",    nev: "Segítség" },
-  { fel: "impresszum.html",  nev: "Impresszum" },
+  { fel: "rolunk.html",  nev: "Rólunk" },
 ];
 const LOGO_FAJL = "assets/img/logo.svg";   // ha nincs ott a fájl, a „MOT" jelvény látszik
 

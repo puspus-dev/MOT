@@ -1,8 +1,7 @@
 /* MOT – Tankönyv nézet: tartalomjegyzék (témakörökkel), haladás, gombok */
-oldalKeret("index.html");
-
 const azonosito = new URLSearchParams(location.search).get("id");
 const konyv = MOT_KONYVEK.find((k) => k.id === azonosito);
+oldalKeret("index.html", konyv && typeof MOT3D !== "undefined" ? MOT3D.tema(konyv.tantargy) : "fold");   // a háttér a tantárgyhoz igazodik
 
 /** A könyv összes feladatsora (leckénkénti + témakörönkénti) a haladás számolásához. */
 const feladatok = (k) => [...k.fejezetek.map((f) => f.feladat), ...Object.values(k.csoportok || {}).map((c) => c.feladat)].filter(Boolean);

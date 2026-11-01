@@ -19,10 +19,12 @@ segitseg.html, impresszum.html, dokumentacio.html
 data/konyvek.js       Tankönyvek és fejezetek (MOT_KONYVEK)
 data/diagramok.js     Fogalomtérképek (MOT_DIAGRAMOK)
 assets/css/style.css  Közös stíluslap (színek az 1. blokkban)
-assets/js/            kozos.js, fooldal.js, konyv.js, diagram.js, elozmenyek.js, 3d.js, animaciok.js
+assets/js/            kozos.js, fooldal.js, konyv.js, diagram.js, elozmenyek.js,
+                      3d.js (3D jelenetek + kapcsoló), animaciok.js, hatter.js, feladat.js (feladatmotor)
 assets/vendor/mxgraph Harmadik féltől: mxGraph (Apache 2.0)
 assets/vendor/three   Harmadik féltől: three.js r147 (MIT)
-6.osztaly/&lt;tankonyv&gt;/ PDF-ek, okostankonyv.html, fejezetenként feladatok.html
+6.osztaly/&lt;tankonyv&gt;/ PDF-ek + okostankonyv.html (tananyag, feladatok és 3D egy fájlban)
+                      (Angol és Hittan: önálló feladatok.html, mert nincs hozzájuk okostankönyv)
 </code></pre>
 <h2>2. URL-paraméterek</h2>
 <table>
@@ -47,11 +49,15 @@ assets/vendor/three   Harmadik féltől: three.js r147 (MIT)
 </tr>
 <tr>
 <td><code>animaciok.html#&lt;név&gt;</code></td>
-<td>A 3D animációk oldala a megadott kártyához görget: <code>naprendszer</code>, <code>evszakok</code>, <code>foldbelseje</code>, <code>toltesek</code>.</td>
+<td>A 3D animációk oldala a megadott kártyához görget: <code>naprendszer</code>, <code>evszakok</code>, <code>holdfazisok</code>, <code>foldbelseje</code>, <code>toltesek</code>, <code>szelerom</code>.</td>
 </tr>
 <tr>
 <td><code>6.osztaly/&lt;könyv&gt;/okostankonyv.html#oldal-&lt;N&gt;</code></td>
 <td>Az okostankönyv N. oldalára ugrik (N = PDF-oldalszám).</td>
+</tr>
+<tr>
+<td><code>6.osztaly/&lt;könyv&gt;/okostankonyv.html#feladat-&lt;id&gt;</code></td>
+<td>Megnyitja az okostankönyvben az adott fejezet feladatsorát.</td>
 </tr>
 </tbody>
 </table>
@@ -146,7 +152,7 @@ assets/vendor/three   Harmadik féltől: three.js r147 (MIT)
 <tr>
 <td><code>feladat</code></td>
 <td>string | null</td>
-<td>A <code>feladatok.html</code> útvonala (az <strong>eredménytár kulcsa</strong>, lásd 5.). <code>null</code>, ha a feladat csak témakörönként van.</td>
+<td>A feladatsor hivatkozása, és egyben az <strong>eredménytár kulcsa</strong> (lásd 5.). Okostankönyves könyvnél <code>…/okostankonyv.html#feladat-&lt;id&gt;</code>, az Angol és Hittan könyveknél a <code>feladatok.html</code> útvonala. <code>null</code>, ha csak témakörönként van feladat.</td>
 </tr>
 <tr>
 <td><code>csoport</code></td>
@@ -165,18 +171,54 @@ assets/vendor/three   Harmadik féltől: three.js r147 (MIT)
 </tr>
 </tbody>
 </table>
-<h2>4. Feladatsorok: a <code>feladatok.html</code> kérdésformátuma</h2>
-<p>Minden feladatsor oldalán egy <code>const D = [...]</code> tömb tartalmazza a kérdéseket. Három típus van:</p>
+<h2>4. Feladatsorok (az okostankönyvekbe építve)</h2>
+<p>A feladatok <strong>az okostankönyv HTML-jében</strong> vannak: a „✏️ Interaktív feladatok" panelben fülek jelennek meg fejezetenként, és minden fejezet végén egy „✏️ Feladatok: …" gomb nyitja meg az adott feladatsort. Keresés közben ezek a gombok elrejtődnek. A motor az <code>assets/js/feladat.js</code> (<code>MOTFeladat</code>).</p>
+<p>Az oldal végén egy <code>MOT_FELADATOK</code> tömb tartalmazza az adatot:</p>
+<pre><code class="language-json">{ &quot;id&quot;: &quot;02_Toldi&quot;, &quot;cim&quot;: &quot;Toldi&quot;, &quot;konyv&quot;: &quot;Irodalom&quot;,
+  &quot;key&quot;: &quot;6.osztaly/&lt;könyv&gt;/okostankonyv.html#feladat-02_Toldi&quot;,
+  &quot;utan&quot;: 175, &quot;d&quot;: [ ...kérdések... ] }
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Mező</th>
+<th>Jelentés</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>Egyedi azonosító; a <code>#feladat-&lt;id&gt;</code> hivatkozás ezt használja.</td>
+</tr>
+<tr>
+<td><code>cim</code>, <code>konyv</code></td>
+<td>A fejezet és a könyv neve (az Előzményekben látszik).</td>
+</tr>
+<tr>
+<td><code>key</code></td>
+<td>Az eredménytár kulcsa; megegyezik a <code>konyvek.js</code> <code>feladat</code> mezőjével.</td>
+</tr>
+<tr>
+<td><code>utan</code></td>
+<td>Az oldalszám, amely <strong>után</strong> megjelenik a fejezetvégi gomb.</td>
+</tr>
+<tr>
+<td><code>d</code></td>
+<td>A kérdések listája (lásd lent).</td>
+</tr>
+</tbody>
+</table>
+<p>Kérdéstípusok:</p>
 <pre><code class="language-json">{ &quot;t&quot;: &quot;c&quot;, &quot;q&quot;: &quot;Kérdés?&quot;, &quot;o&quot;: [&quot;helyes&quot;, &quot;rossz1&quot;, &quot;rossz2&quot;], &quot;a&quot;: 0 }
 { &quot;t&quot;: &quot;f&quot;, &quot;q&quot;: &quot;Kérdés?&quot;, &quot;a&quot;: [&quot;helyes válasz&quot;, &quot;elfogadott másik alak&quot;] }
 { &quot;t&quot;: &quot;m&quot;, &quot;q&quot;: &quot;Párosítsd!&quot;, &quot;p&quot;: [[&quot;bal1&quot;, &quot;jobb1&quot;], [&quot;bal2&quot;, &quot;jobb2&quot;]] }
 </code></pre>
 <ul>
-<li><strong><code>c</code> – feleletválasztós</strong>: <code>o</code> a válaszlista, <code>a</code> a helyes elem <strong>indexe</strong>. A sorrendet az oldal betöltéskor véletlenszerűen keveri.</li>
-<li><strong><code>f</code> – beírós</strong>: <code>a</code> az elfogadott válaszok listája. Az összehasonlításnál a kis- és nagybetű, a szóközök és a tizedesvessző/pont különbsége nem számít.</li>
-<li><strong><code>m</code> – párosítás</strong>: <code>p</code> a (bal, jobb) párok listája. A jobb oldali értékek legördülő menüből választhatók; a kérdés akkor számít jónak, ha minden pár helyes.</li>
+<li><strong><code>c</code> – feleletválasztós</strong>: <code>o</code> a válaszlista, <code>a</code> a helyes elem <strong>indexe</strong>. A sorrendet az oldal véletlenszerűen keveri.</li>
+<li><strong><code>f</code> – beírós</strong>: <code>a</code> az elfogadott válaszok listája. A kis- és nagybetű, a szóközök és a tizedesvessző/pont különbsége nem számít.</li>
+<li><strong><code>m</code> – párosítás</strong>: <code>p</code> a (bal, jobb) párok listája, a jobb oldali értékek legördülő menüből választhatók; minden pár helyes kell.</li>
 </ul>
-<p>Egy kérdés 1 pontot ér. A feladatsor végén az oldal kiírja az eredményt, és elmenti (lásd 5.).</p>
+<p>Egy kérdés 1 pontot ér. A <code>MOTFeladat</code> függvényei: <code>kviz(adat, doboz, kesz)</code> (egy feladatsor kirajzolása), <code>panel(szulo, adatok)</code> (fülek + kvíz), <code>vegeGomb(adat, panel)</code> (fejezetvégi gomb), <code>okostankonyvbe(adatok)</code> (a kész, statikus okostankönyv-oldalakba építi be a panelt a „Gyakorlás" elé és a gombokat a fejezetek végére).</p>
 <h2>5. Eredménytár (localStorage)</h2>
 <p>Kulcs: <code>mot_eredmenyek</code>. Érték: JSON objektum, amelynek kulcsa a feladatsor <code>feladat</code> útvonala:</p>
 <pre><code class="language-json">{
@@ -262,12 +304,20 @@ assets/vendor/three   Harmadik féltől: three.js r147 (MIT)
 </thead>
 <tbody>
 <tr>
-<td><code>hero3d(tarolo)</code></td>
-<td>Főoldali háttér: forgó Föld keringő Holddal (nem interaktív).</td>
+<td><code>hatter3d(tarolo, tema)</code></td>
+<td>Háttér a kék sávokban. Témák: <code>fold</code> (Föld + Hold), <code>mertan</code> (forgó testek), <code>konyv</code> (lebegő könyvek), <code>hang</code> (hangszínszabályzó-oszlopok).</td>
 </tr>
 <tr>
 <td><code>naprendszer(tarolo)</code></td>
 <td>Nap–Föld–Hold, sebességcsúszka, tengely és pálya ki/be.</td>
+</tr>
+<tr>
+<td><code>holdfazisok(tarolo)</code></td>
+<td>A Hold fázisai: pályacsúszka, a Földről látott alak képe és a fázis neve.</td>
+</tr>
+<tr>
+<td><code>szelerom(tarolo)</code></td>
+<td>Szélerőműpark: szélsebesség-csúszka, forgó lapátok, termelt teljesítmény.</td>
 </tr>
 <tr>
 <td><code>evszakok(tarolo)</code></td>
@@ -284,6 +334,9 @@ assets/vendor/three   Harmadik féltől: three.js r147 (MIT)
 </tbody>
 </table>
 <ul>
+<li><strong>3D ki-be kapcsoló (<code>MOT3D</code>):</strong> minden 3D elem a <code>MOT3D.jelenet(tarolo, epitoFuggveny, uzenet)</code>-en át indul, ezért egyetlen kapcsolóval (a fejlécben, ill. az önálló oldalak kék sávjában) az összes 3D elem egyszerre kapcsolható ki és be. Kikapcsoláskor a jelenet leáll, és a WebGL-erőforrások felszabadulnak. Az állapot a <code>localStorage</code>-ban van (<code>mot_3d</code> = <code>be</code>/<code>ki</code>); alapértelmezés: be, kivéve ha a böngészőben „mozgás csökkentése" van beállítva. További függvények: <code>MOT3D.kapcsolo(szulo)</code>, <code>MOT3D.be()</code>, <code>MOT3D.beallit(bool)</code>, <code>MOT3D.figyel(fn)</code>, <code>MOT3D.tema(tantargy)</code>.</li>
+<li><strong>Animációs regiszter:</strong> az <code>ANIMACIOK</code> tömb írja le az animációkat (<code>kulcs</code>, <code>ikon</code>, <code>cim</code>, <code>fn</code>, <code>leiras</code>, <code>vezerlo</code>, <code>info</code>). Az <code>animBeszur(kulcs, hova, mod)</code> bárhová beilleszt egy animációkártyát (<code>mod = "utan"</code>: az adott elem után). Így kerülnek a 3D animációk a Természettudomány okostankönyv megfelelő leckéi után is.</li>
+<li><strong>Önálló oldalakon</strong> (Angol és Hittan feladatok, okostankönyvek) a <code>hatter.js</code> hozza létre a 3D sávot a kapcsolóval: <code>&lt;script src=".../hatter.js" data-tema="fold|mertan|konyv|hang"&gt;</code> (a <code>three.min.js</code> és a <code>3d.js</code> után).</li>
 <li><strong>Közös színpad:</strong> <code>szinpad(tarolo, opciok)</code> hozza létre a renderert és a kamerát. Húzással forgatható, görgetéssel nagyítható; a ciklus csak akkor fut, amikor a tároló látszik. Visszaad egy objektumot, amelyen <code>ciklus(fn)</code>-nel adhatsz hozzá képkockánkénti frissítést (<code>fn(dt, ido)</code>).</li>
 <li><strong>Beállítások:</strong> <code>opciok.tavol</code> (kamera távolsága), <code>pitch</code>/<code>yaw</code> (kezdő nézet), <code>interaktiv</code> (false: nem forgatható), <code>csillagok</code> (csillagos háttér).</li>
 <li><strong>Új jelenet:</strong> írj egy <code>function sajatJelenet(tarolo)</code> függvényt a <code>3d.js</code>-ben (másolj egy meglévőt), tegyél az <code>animaciok.html</code>-be egy <code>&lt;div class="anim" id="…-vaszon"&gt;</code> elemet, és hívd meg az <code>animaciok.js</code>-ben.</li>
@@ -296,7 +349,8 @@ assets/vendor/three   Harmadik féltől: three.js r147 (MIT)
 <li><strong>Új tankönyv:</strong> vegyél fel egy új elemet a <code>MOT_KONYVEK</code> tömbbe, és hozz létre hozzá mappát a <code>6.osztaly/</code> alatt.</li>
 <li><strong>Új évfolyam:</strong> írd be az <code>evfolyam</code> mezőbe az új értéket (pl. <code>7. osztály</code>), a Kezdőlap szűrője automatikusan felveszi.</li>
 <li><strong>Új fogalomtérkép:</strong> másolj egy blokkot a <code>data/diagramok.js</code>-ben.</li>
-<li><strong>Új kérdés:</strong> szerkeszd a megfelelő <code>feladatok.html</code> <code>const D = [...]</code> tömbjét a 4. fejezet formátuma szerint.</li>
+<li><strong>Új kérdés:</strong> szerkeszd az okostankönyv-HTML végén lévő <code>MOT_FELADATOK</code> tömb megfelelő <code>d</code> listáját a 4. fejezet formátuma szerint.</li>
+<li><strong>Új animáció az okostankönyvben:</strong> vegyél fel egy <code>{ "utan": &lt;oldalszám&gt;, "kulcs": "&lt;animáció&gt;" }</code> elemet az <code>ANIM</code> listába (Természettudomány), vagy hívd meg az <code>animBeszur(kulcs, elem, "utan")</code>-t.</li>
 </ol>
 <h2>9. Licencek</h2>
 <ul>
@@ -338,6 +392,8 @@ assets/vendor/three   Harmadik féltől: three.js r147 (MIT)
 </tbody>
 </table></div></main>
   <footer id="lablec"></footer>
+  <script src="assets/vendor/three/three.min.js"></script>
+  <script src="assets/js/3d.js"></script>
   <script src="assets/js/kozos.js"></script>
   <script>oldalKeret("dokumentacio.html");</script>
 </body>

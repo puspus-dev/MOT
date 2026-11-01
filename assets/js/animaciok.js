@@ -1,11 +1,9 @@
-/* MOT – 3D animációk oldal: a jelenetek indítása. A #hash (pl. animaciok.html#evszakok) a megfelelő kártyához görget. */
+/* MOT – 3D animációk oldal: a kártyák a 3d.js ANIMACIOK regiszteréből épülnek, és a közös 3D-kapcsolóval ki-be kapcsolhatók.
+   A #hash (pl. animaciok.html#evszakok) a megfelelő kártyához görget. */
 oldalKeret("animaciok.html");
 if (typeof THREE === "undefined") {
-  document.querySelectorAll(".anim").forEach((e) => e.innerHTML = `<div class="ures">A 3D könyvtár nem töltődött be.</div>`);
+  $("#kartyak").innerHTML = `<div class="panel ures">A 3D könyvtár nem töltődött be.</div>`;
 } else {
-  naprendszer($id("naprendszer-vaszon"));
-  evszakok($id("evszakok-vaszon"));
-  foldBelseje($id("foldbelseje-vaszon"));
-  toltesek($id("toltesek-vaszon"));
+  ANIMACIOK.forEach((a) => animBeszur(a.kulcs, $("#kartyak")));
 }
-if (location.hash) setTimeout(() => { const e = document.getElementById(location.hash.slice(1)); if (e) e.scrollIntoView({ behavior: "smooth" }); }, 200);
+if (location.hash) setTimeout(() => { const e = document.getElementById(location.hash.slice(1)); if (e) e.scrollIntoView({ behavior: "smooth" }); }, 300);

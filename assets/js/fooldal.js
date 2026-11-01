@@ -45,5 +45,3 @@ $("#szamlalok").innerHTML =
   `<span>📚 ${MOT_KONYVEK.length} tankönyv</span><span>✏️ ${MOT_KONYVEK.reduce((a, k) => a + feladatDb(k), 0)} feladatsor</span><span>🌍 4 3D animáció</span>`;
 kirajzol();
 
-/* 3D háttér a kék sávban (ha a three.js betöltődött) */
-if (typeof THREE !== "undefined") hero3d($("#hero3d"));

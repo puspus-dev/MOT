@@ -2,5 +2,5 @@
 
 Hivatalos oldal: https://www.tankonyvkatalogus.hu/tankonyv/OH-ENZ06TA
 
-- [A nepzene vilaga](01_A_nepzene_vilaga/01_A_nepzene_vilaga.pdf) · [feladatok](01_A_nepzene_vilaga/feladatok.html)
-- [Barangolas a zenetortenetben](02_Barangolas_a_zenetortenetben/02_Barangolas_a_zenetortenetben.pdf) · [feladatok](02_Barangolas_a_zenetortenetben/feladatok.html)
+- [A nepzene vilaga](01_A_nepzene_vilaga/01_A_nepzene_vilaga.pdf) · [feladatok](okostankonyv.html#feladat-01_A_nepzene_vilaga)
+- [Barangolas a zenetortenetben](02_Barangolas_a_zenetortenetben/02_Barangolas_a_zenetortenetben.pdf) · [feladatok](okostankonyv.html#feladat-02_Barangolas_a_zenetortenetben)

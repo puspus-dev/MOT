@@ -1,6 +1,6 @@
 /* ==========================================================
    MOT – 3D animációk (three.js r147, helyben tárolva)
-   Tartalom: 1. Közös színpad  2. Segédek  3. Főoldali háttér
+   Tartalom: 0. Kapcsoló (MOT3D)  1. Közös színpad  2. Segédek  3. Háttértémák
              4. Nap–Föld–Hold  5. Évszakok  6. Föld belseje
              7. Elektromos töltések
    Minden jelenet egy függvény, amely egy tárolóelemet kap.
@@ -8,6 +8,79 @@
    ========================================================== */
 const MOZGASCSOKKENTES = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
 const FOK = Math.PI / 180;
+
+/* ---------- 0. 3D KAPCSOLÓ ÉS JELENETKEZELŐ (MOT3D) ----------
+   Minden 3D elem (háttér, animáció) a MOT3D.jelenet()-en át indul, így egyetlen kapcsolóval ki-be kapcsolható.
+   Az állapot a böngészőben marad (localStorage: mot_3d = "be" / "ki"). */
+const MOT3D = {
+  kulcs: "mot_3d",
+  valtozas: [],          // figyelők: (bekapcsolva) => void
+  utolso: null,          // a legutóbb létrehozott színpad (a jelenet() használja)
+  /** Be van-e kapcsolva? Alapértelmezés: be, kivéve ha a böngészőben csökkentett mozgás van beállítva. */
+  be() {
+    try { const v = localStorage.getItem(this.kulcs); if (v !== null) return v === "be"; } catch (e) {}
+    return !MOZGASCSOKKENTES;
+  },
+  beallit(be) {
+    try { localStorage.setItem(this.kulcs, be ? "be" : "ki"); } catch (e) {}
+    this.valtozas.forEach((f) => f(be));
+  },
+  figyel(fn) { this.valtozas.push(fn); fn(this.be()); },
+  /** Tantárgy → háttértéma. */
+  tema(tantargy) { return { "Természettudomány": "fold", "Matematika": "mertan", "Ének-zene": "hang" }[tantargy] || "konyv"; },
+  /** A kapcsoló (switch) beillesztése a megadott elembe. */
+  kapcsolo(szulo) {
+    if (!szulo) return;
+    this.stilus();
+    const l = document.createElement("label"); l.className = "kapcsolo"; l.title = "3D animációk ki- és bekapcsolása";
+    l.innerHTML = `<input type="checkbox" role="switch" aria-label="3D animációk"><span class="kapcsolo__sav"></span><span>3D</span>`;
+    const cb = l.querySelector("input"); cb.onchange = () => MOT3D.beallit(cb.checked);
+    szulo.appendChild(l); this.figyel((be) => { cb.checked = be; });
+  },
+  /** Egy 3D jelenet indítása a tárolóban; a kapcsolóval leáll / újraindul.
+   *  epit(tarolo) a jelenetet építő függvény; uzenet=true esetén kikapcsolt állapotban szöveg látszik. */
+  jelenet(tarolo, epit, uzenet) {
+    if (!tarolo) return { torol() {} };
+    let s = null;
+    const fn = (be) => {
+      if (be && !s) { tarolo.innerHTML = ""; this.utolso = null; epit(tarolo); s = this.utolso; }
+      else if (!be) {
+        if (s) { s.leallit(); s = null; }
+        tarolo.innerHTML = uzenet ? `<div class="ures" style="padding:24px;color:#cfd8e8">A 3D animációk ki vannak kapcsolva. Kapcsold be a kapcsolóval (3D)!</div>` : "";
+      }
+    };
+    this.figyel(fn);
+    return { torol: () => { const i = this.valtozas.indexOf(fn); if (i >= 0) this.valtozas.splice(i, 1); if (s) { s.leallit(); s = null; } } };
+  },
+  /** A kapcsoló és a sáv stílusa (egyszer kerül az oldalba). */
+  stilus() {
+    if (document.getElementById("mot3d-css")) return;
+    const st = document.createElement("style"); st.id = "mot3d-css";
+    st.textContent = `
+.kapcsolo{display:inline-flex;align-items:center;gap:8px;cursor:pointer;font:600 14px system-ui,sans-serif;user-select:none;position:relative}
+.kapcsolo input{position:absolute;opacity:0;width:0;height:0}
+.kapcsolo__sav{width:42px;height:24px;border-radius:999px;background:#8d9ab0;position:relative;transition:background .2s}
+.kapcsolo__sav::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .2s}
+.kapcsolo input:checked+.kapcsolo__sav{background:#2f9e44}
+.kapcsolo input:checked+.kapcsolo__sav::after{transform:translateX(18px)}
+.kapcsolo input:focus-visible+.kapcsolo__sav{outline:2px solid #4c9aff;outline-offset:2px}
+.mot3d-sav{position:relative;height:96px;overflow:hidden;margin:0 0 12px;background:linear-gradient(120deg,#0b4f9c,#1c7ed6);color:#fff;display:flex;align-items:center;padding:0 16px;font:600 17px system-ui,sans-serif}
+.mot3d-vaszon{position:absolute;top:0;bottom:0;right:0;width:55%}
+.mot3d-szoveg{position:relative;z-index:1}
+.mot3d-sav .kapcsolo{position:absolute;right:12px;top:8px;z-index:2;color:#fff}
+.mot-anim{margin:16px 0;padding:16px;border:1px solid #dde4ef;border-radius:16px;background:#fff;color:#1b2a41;font:16px/1.5 system-ui,sans-serif}
+.mot-anim h3{margin:0 0 6px;font-size:20px}.mot-anim p{margin:.3em 0}
+.mot-anim .anim{width:100%;height:400px;border-radius:12px;overflow:hidden;background:radial-gradient(circle at 50% 40%,#12284a,#050b18)}
+.mot-anim .vezerlo{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin:12px 0 4px}
+.mot-anim .vezerlo label{font-size:14px;color:#5b6b82;display:flex;align-items:center;gap:6px}
+.mot-anim .gomb{padding:7px 14px;border-radius:999px;border:1px solid #1c7ed6;color:#0b4f9c;background:none;font:700 14px system-ui,sans-serif;cursor:pointer}
+.mot-anim .gomb--tomor{background:#1c7ed6;color:#fff}
+.mot-anim .animinfo{margin-top:8px;padding:12px 14px;border-radius:12px;background:#f3f6fb;min-height:52px}
+.mot-anim canvas.holdkep{background:#0b1020;border-radius:50%}
+@media(prefers-color-scheme:dark){.mot-anim{background:#18212f;color:#e8eef8;border-color:#2a3649}.mot-anim .animinfo{background:#0f1520}.mot-anim .gomb{color:#7db4ff}.mot-anim .gomb--tomor{color:#fff}}`;
+    document.head.appendChild(st);
+  },
+};
 
 /* ---------- 1. KÖZÖS SZÍNPAD ---------- */
 /** Létrehozza a renderert, a kamerát (húzással forgatható, görgetéssel nagyítható) és az animációs ciklust.
@@ -71,9 +144,9 @@ function szinpad(tarolo, opciok = {}) {
   }
 
   /* animációs ciklus: csak akkor fut, ha a tároló látszik */
-  let lathato = true, utolso = performance.now(), ido = 0, fut = false;
+  let lathato = true, utolso = performance.now(), ido = 0, fut = false, leall = false, io = null, ro = null;
   function kep(most) {
-    fut = false;
+    fut = false; if (leall) return;
     const dt = Math.min((most - utolso) / 1000, 0.1); utolso = most; ido += dt;
     feladatok.forEach((f) => f(dt, ido));
     renderer.render(scene, kamera);
@@ -81,12 +154,19 @@ function szinpad(tarolo, opciok = {}) {
   }
   function indit() { if (!fut) { utolso = performance.now(); fut = true; requestAnimationFrame(kep); } }
   if ("IntersectionObserver" in window) {
-    new IntersectionObserver((e) => { lathato = e[0].isIntersecting; if (lathato) indit(); }).observe(tarolo);
+    io = new IntersectionObserver((e) => { lathato = e[0].isIntersecting; if (lathato) indit(); }); io.observe(tarolo);
   }
-  if ("ResizeObserver" in window) new ResizeObserver(() => { meretez(); renderer.render(scene, kamera); }).observe(tarolo);
+  if ("ResizeObserver" in window) { ro = new ResizeObserver(() => { meretez(); renderer.render(scene, kamera); }); ro.observe(tarolo); }
   meretez(); kameraBeallit(); indit();
 
-  return { scene, kamera, renderer, nezet, kameraBeallit, ciklus: (fn) => feladatok.push(fn) };
+  function leallit() {                       // a kapcsoló kikapcsolásakor: ciklus, megfigyelők, WebGL-kontextus felszabadítása
+    leall = true; if (io) io.disconnect(); if (ro) ro.disconnect();
+    renderer.dispose(); if (renderer.forceContextLoss) renderer.forceContextLoss();
+    if (renderer.domElement.parentNode) renderer.domElement.parentNode.removeChild(renderer.domElement);
+  }
+  const pad = { scene, kamera, renderer, nezet, kameraBeallit, leallit, ciklus: (fn) => feladatok.push(fn) };
+  MOT3D.utolso = pad;
+  return pad;
 }
 
 /* ---------- 2. SEGÉDEK ---------- */
@@ -142,20 +222,59 @@ function napKeszit() {                                  // Nap + fényforrás
 }
 const $id = (i) => document.getElementById(i);
 
-/* ---------- 3. FŐOLDALI HÁTTÉR: forgó Föld + keringő Hold ---------- */
-function hero3d(tarolo) {
-  const s = szinpad(tarolo, { tavol: 9, pitch: 0.25, interaktiv: false, csillagok: true });
-  if (!s) return;
-  s.scene.add(new THREE.AmbientLight(0x6d7fa8, 0.7));
-  const fn = new THREE.DirectionalLight(0xffffff, 1.5); fn.position.set(6, 3, 5); s.scene.add(fn);
-  const fold = foldKeszit(2); fold.dont.position.set(0, 0, 0); s.scene.add(fold.dont); fold.tengely.visible = false;
-  const lég = new THREE.Mesh(new THREE.SphereGeometry(2.12, 32, 24), new THREE.MeshBasicMaterial({ color: 0x6fb3ff, transparent: true, opacity: .13, side: THREE.BackSide }));
-  s.scene.add(lég);
-  const holdKor = new THREE.Group(); s.scene.add(holdKor);
-  const hold = new THREE.Mesh(new THREE.SphereGeometry(0.45, 24, 16), new THREE.MeshStandardMaterial({ map: holdTextura(), roughness: 1 }));
-  hold.position.set(4.2, 0.6, 0); holdKor.add(hold);
-  s.ciklus((dt) => { fold.gomb.rotation.y += dt * 0.22; holdKor.rotation.y += dt * 0.18; });
+/* ---------- 3. HÁTTÉRTÉMÁK (minden oldal kék sávjában) ----------
+   fold = Föld + Hold, mertan = forgó testek, konyv = lebegő könyvek, hang = hangszínszabályzó-oszlopok. */
+const HATTEREK = {
+  fold(s) {
+    const fold = foldKeszit(2); s.scene.add(fold.dont); fold.tengely.visible = false;
+    s.scene.add(new THREE.Mesh(new THREE.SphereGeometry(2.12, 32, 24), new THREE.MeshBasicMaterial({ color: 0x6fb3ff, transparent: true, opacity: .13, side: THREE.BackSide })));
+    const holdKor = new THREE.Group(); s.scene.add(holdKor);
+    const hold = new THREE.Mesh(new THREE.SphereGeometry(0.45, 24, 16), new THREE.MeshStandardMaterial({ map: holdTextura(), roughness: 1 }));
+    hold.position.set(4.2, 0.6, 0); holdKor.add(hold);
+    s.ciklus((dt) => { fold.gomb.rotation.y += dt * 0.22; holdKor.rotation.y += dt * 0.18; });
+  },
+  mertan(s) {
+    const g = new THREE.Group(); s.scene.add(g);
+    const ico = new THREE.Mesh(new THREE.IcosahedronGeometry(1.7, 0), new THREE.MeshStandardMaterial({ color: 0x4dabf7, flatShading: true, roughness: .4 }));
+    const kocka = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(3.4, 3.4, 3.4)), new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: .65 }));
+    const gy1 = new THREE.Mesh(new THREE.TorusGeometry(2.9, 0.05, 8, 72), new THREE.MeshBasicMaterial({ color: 0xffd43b }));
+    const gy2 = new THREE.Mesh(new THREE.TorusGeometry(2.4, 0.04, 8, 72), new THREE.MeshBasicMaterial({ color: 0xff8787 }));
+    g.add(ico, kocka, gy1, gy2);
+    s.ciklus((dt, t) => { g.rotation.y += dt * 0.3; ico.rotation.x += dt * 0.5; kocka.rotation.z += dt * 0.2; gy1.rotation.x = t * 0.4; gy2.rotation.y = t * 0.3; });
+  },
+  konyv(s) {
+    const szinek = [0xd6336c, 0x7048e8, 0x1c7ed6, 0x2f9e44, 0xe8590c], konyvek = [];
+    szinek.forEach((sz, i) => {
+      const fed = new THREE.MeshStandardMaterial({ color: sz, roughness: .6 }), lap = new THREE.MeshStandardMaterial({ color: 0xf5f1e6, roughness: .9 });
+      const b = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.6, 0.32), [lap, fed, lap, lap, fed, fed]);   // +x, −x, +y, −y, +z, −z
+      b.position.set(-4 + i * 2, i % 2 ? 0.8 : -0.6, (i % 3) - 1); b.userData.y0 = b.position.y; s.scene.add(b); konyvek.push(b);
+    });
+    s.ciklus((dt, t) => konyvek.forEach((b, i) => {
+      b.rotation.y += dt * (0.4 + i * 0.08); b.rotation.x = Math.sin(t * 0.6 + i) * 0.25; b.position.y = b.userData.y0 + Math.sin(t * 1.2 + i) * 0.25;
+    }));
+  },
+  hang(s) {
+    const g = new THREE.Group(); g.rotation.x = 0.25; s.scene.add(g); const oszlopok = [];
+    for (let i = 0; i < 11; i++) {
+      const m = new THREE.Mesh(new THREE.BoxGeometry(0.5, 1, 0.5), new THREE.MeshStandardMaterial({ color: new THREE.Color().setHSL(0.55 + i * 0.035, 0.8, 0.55) }));
+      m.position.x = (i - 5) * 0.8; g.add(m); oszlopok.push(m);
+    }
+    s.ciklus((dt, t) => {
+      oszlopok.forEach((m, i) => { const h = 1.2 + Math.abs(Math.sin(t * 2 + i * 0.6)) * 2.6 + Math.sin(t * 3.1 + i) * 0.4; m.scale.y = h; m.position.y = h / 2 - 1.2; });
+      g.rotation.y = Math.sin(t * 0.3) * 0.5;
+    });
+  },
+};
+/** Háttérjelenet a megadott témával. */
+function hatter3d(tarolo, tema = "fold") {
+  const s = szinpad(tarolo, { tavol: 9, pitch: 0.25, interaktiv: false, csillagok: tema === "fold" || tema === "hang" });
+  if (!s) return null;
+  s.scene.add(new THREE.AmbientLight(0x8090b8, 0.8));
+  const f = new THREE.DirectionalLight(0xffffff, 1.4); f.position.set(6, 4, 5); s.scene.add(f);
+  (HATTEREK[tema] || HATTEREK.fold)(s);
+  return s;
 }
+const hero3d = (tarolo) => hatter3d(tarolo, "fold");   // régi név (kompatibilitás)
 
 /* ---------- 4. NAP–FÖLD–HOLD ---------- */
 function naprendszer(tarolo) {
@@ -295,4 +414,111 @@ function toltesek(tarolo) {
     na.position.set(a.position.x + ir * 0.9, 0, 0); na.setDirection(new THREE.Vector3(ir, 0, 0)); na.setLength(ero, 0.45, 0.3);
     nb.position.set(b.position.x - ir * 0.9, 0, 0); nb.setDirection(new THREE.Vector3(-ir, 0, 0)); nb.setLength(ero, 0.45, 0.3);
   });
+}
+
+/* ---------- 8. HOLDFÁZISOK ---------- */
+function holdKepRajz(vaszon, fi) {                    // a Hold „Földről nézett" alakja (északi félgömb): fi = 0° újhold, 180° telihold
+  const x = vaszon.getContext("2d"), R = 44, cx = 50, cy = 50, k = Math.cos(fi * FOK), nov = fi < 180;
+  x.clearRect(0, 0, 100, 100); x.fillStyle = "#2a2f3d"; x.beginPath(); x.arc(cx, cy, R, 0, 6.283); x.fill();
+  x.fillStyle = "#f2efe2";
+  for (let y = -R; y <= R; y++) {                     // soronként: megvilágított rész a terminátorig
+    const w = Math.sqrt(R * R - y * y), t = k * w;
+    if (nov) x.fillRect(cx + t, cy + y, w - t, 1); else x.fillRect(cx - w, cy + y, w + t, 1);
+  }
+}
+const FAZISNEVEK = [[0, "újhold"], [45, "növekvő sarló"], [90, "első negyed"], [135, "növekvő hold"], [180, "telihold"], [225, "fogyó hold"], [270, "utolsó negyed"], [315, "fogyó sarló"]];
+function holdfazisok(tarolo) {
+  const s = szinpad(tarolo, { tavol: 17, pitch: 0.75, csillagok: true });
+  if (!s) return;
+  s.scene.add(new THREE.AmbientLight(0x1a2236, 0.35));
+  const nap = new THREE.DirectionalLight(0xffffff, 2.0); nap.position.set(30, 0, 0); s.scene.add(nap);   // a napsugarak +x felől érkeznek
+  const napGomb = new THREE.Mesh(new THREE.SphereGeometry(2.2, 32, 24), new THREE.MeshBasicMaterial({ color: 0xffc933 })); napGomb.position.set(22, 0, 0); s.scene.add(napGomb);
+  const fold = foldKeszit(1.4); s.scene.add(fold.dont); fold.tengely.visible = false;
+  const palya = gyuru(6, 0x9aa4b8, 0.04); s.scene.add(palya);
+  const hold = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 24), new THREE.MeshStandardMaterial({ map: holdTextura(), roughness: 1 })); s.scene.add(hold);
+  const all = { fi: 0, jatek: true }, cs = $id("hf-csuszka"), gomb = $id("hf-jatek"), info = $id("hf-info"), kep = $id("hf-kep");
+  if (gomb) gomb.onclick = () => { all.jatek = !all.jatek; gomb.textContent = all.jatek ? "⏸ Megállít" : "▶ Indít"; };
+  if (cs) cs.oninput = () => { all.fi = +cs.value; all.jatek = false; if (gomb) gomb.textContent = "▶ Indít"; };
+  s.ciklus((dt) => {
+    if (all.jatek) all.fi = (all.fi + dt * 24) % 360;
+    hold.position.set(6 * Math.cos(all.fi * FOK), 0, -6 * Math.sin(all.fi * FOK));
+    fold.gomb.rotation.y += dt * 0.5;
+    const nev = FAZISNEVEK.reduce((m, f) => (Math.abs(((all.fi - f[0] + 540) % 360) - 180) < 22.5 ? f[1] : m), "");
+    const fenyes = Math.round((1 - Math.cos(all.fi * FOK)) * 50);
+    if (kep) holdKepRajz(kep, all.fi);
+    if (info) info.innerHTML = `<b>${nev}</b> – a Hold megvilágított felének kb. ${fenyes}%-át látjuk a Földről. A Holdnak mindig a Nap felé néző fele világos, a fázis attól függ, honnan nézzük.`;
+    if (cs) cs.value = Math.round(all.fi);
+  });
+}
+
+/* ---------- 9. SZÉLERŐMŰPARK ---------- */
+function szelerom(tarolo) {
+  const s = szinpad(tarolo, { tavol: 26, pitch: 0.18, yaw: 0.3 });
+  if (!s) return;
+  s.scene.add(new THREE.HemisphereLight(0xcfe6ff, 0x4c7a3a, 1.0)); const f = new THREE.DirectionalLight(0xffffff, 1.0); f.position.set(8, 14, 10); s.scene.add(f);
+  const fold = new THREE.Mesh(new THREE.CircleGeometry(40, 48), new THREE.MeshStandardMaterial({ color: 0x5aa05a, roughness: 1 })); fold.rotation.x = -Math.PI / 2; fold.position.y = -4; s.scene.add(fold);
+  const rotorok = [];
+  [[-9, -3, 0.9], [0, 0, 1.15], [9, -5, 0.8]].forEach(([x, z, m]) => {     // három erőmű = „park"
+    const g = new THREE.Group(); g.position.set(x, -4, z); g.scale.setScalar(m); s.scene.add(g);
+    const torony = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.5, 9, 16), new THREE.MeshStandardMaterial({ color: 0xf1f3f5, roughness: .6 })); torony.position.y = 4.5; g.add(torony);
+    const gondola = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.7, 1.9), new THREE.MeshStandardMaterial({ color: 0xdee2e6 })); gondola.position.set(0, 9.2, 0.2); g.add(gondola);
+    const rotor = new THREE.Group(); rotor.position.set(0, 9.2, 1.25); g.add(rotor);
+    for (let i = 0; i < 3; i++) {
+      const lapat = new THREE.Mesh(new THREE.BoxGeometry(0.28, 4.2, 0.05), new THREE.MeshStandardMaterial({ color: 0xffffff }));
+      lapat.position.y = 2.1; const t = new THREE.Group(); t.rotation.z = i * 2.0944; t.add(lapat); rotor.add(t);
+    }
+    rotor.add(new THREE.Mesh(new THREE.SphereGeometry(0.35, 16, 12), new THREE.MeshStandardMaterial({ color: 0xc92a2a })));
+    rotorok.push(rotor);
+  });
+  const cs = $id("sz-csuszka"), info = $id("sz-info"), sav = $id("sz-sav");
+  const all = { v: 8 };
+  if (cs) cs.oninput = () => { all.v = +cs.value; };
+  s.ciklus((dt) => {
+    const hasznos = all.v >= 3;                                  // 3 m/s alatt nem indul be
+    const omega = hasznos ? Math.min(all.v, 20) * 0.28 : 0;      // szemléltető fordulatszám
+    rotorok.forEach((r) => { r.rotation.z -= dt * omega; });
+    const teljesitmeny = hasznos ? Math.min(1, Math.pow(all.v / 12, 3)) : 0;   // a szél erejével gyorsan nő
+    if (sav) sav.style.width = Math.round(teljesitmeny * 100) + "%";
+    if (info) info.innerHTML = `Szélsebesség: <b>${all.v} m/s</b> – ` + (!hasznos ? "túl gyenge szél, a lapátok nem indulnak be, nincs villamosenergia-termelés." :
+      teljesitmeny >= 1 ? "erős szél, az erőművek a legnagyobb teljesítménnyel termelnek." : "az erőművek termelnek: minél erősebb a szél, annál több villamos energiát adnak.");
+  });
+}
+
+/* ---------- 10. REGISZTER: az animációk leírása (az animaciok.html és az okostankönyvek is ebből építkezik) ---------- */
+const ANIMACIOK = [
+  { kulcs: "naprendszer", ikon: "☀️", cim: "Nap, Föld és Hold", fn: naprendszer,
+    leiras: "A Föld a tengelye körül forog (ettől váltakozik a nappal és az éjszaka), és közben kering a Nap körül. A Hold a Földet kerüli meg. <i>Az arányok szemléltetők, nem méretarányosak.</i>",
+    vezerlo: `<button class="gomb" id="nap-jatek">⏸ Megállít</button><label>Sebesség <input type="range" id="nap-sebesseg" min="0.2" max="4" step="0.1" value="1"></label><label><input type="checkbox" id="nap-tengely" checked> Forgástengely</label><label><input type="checkbox" id="nap-palya" checked> Hold pályája</label>`,
+    info: "Figyeld meg, hogy a Föld mindig félig meg van világítva: ahol a Nap felé néz, ott nappal van, a másik oldalon éjszaka." },
+  { kulcs: "evszakok", ikon: "🌦️", cim: "Az évszakok kialakulása", fn: evszakok, infoId: "ev-info",
+    leiras: "A Föld forgástengelye ferde, és a keringés során mindig ugyanarra dől. Ezért kap a két félgömb az év különböző szakaszaiban más-más szögben napsugarakat.",
+    vezerlo: `<button class="gomb gomb--tomor" data-theta="90">Tavasz (márc. 21.)</button><button class="gomb gomb--tomor" data-theta="180">Nyár (jún. 21.)</button><button class="gomb gomb--tomor" data-theta="270">Ősz (szept. 23.)</button><button class="gomb gomb--tomor" data-theta="0">Tél (dec. 22.)</button><button class="gomb" id="ev-jatek">▶ Automatikus keringés</button><label>Pálya <input type="range" id="ev-csuszka" min="0" max="360" value="180"></label>`, info: "" },
+  { kulcs: "holdfazisok", ikon: "🌙", cim: "A Hold fázisai", fn: holdfazisok, infoId: "hf-info",
+    leiras: "A Hold a Föld körül kering, és mindig a Nap felé néző fele világos. Attól függően, hogy hol áll, a Földről más-más alakban látjuk. A bal alsó kép azt mutatja, amit az északi félgömbről látunk.",
+    vezerlo: `<button class="gomb" id="hf-jatek">⏸ Megállít</button><label>Pálya <input type="range" id="hf-csuszka" min="0" max="359" value="0"></label><canvas class="holdkep" id="hf-kep" width="100" height="100" style="width:64px;height:64px"></canvas>`, info: "" },
+  { kulcs: "foldbelseje", ikon: "🌋", cim: "A Föld belső szerkezete", fn: foldBelseje, infoId: "fb-info",
+    leiras: "A kivágott gömbön látszanak a Föld rétegei. Válassz egy réteget, és olvasd el a leírását! <i>A rétegek vastagsága szemléltető, nem méretarányos.</i>",
+    vezerlo: `<button class="gomb gomb--tomor" data-reteg="kereg">Földkéreg</button><button class="gomb gomb--tomor" data-reteg="kopeny">Földköpeny</button><button class="gomb gomb--tomor" data-reteg="kulsomag">Külső mag</button><button class="gomb gomb--tomor" data-reteg="belsomag">Belső mag</button><button class="gomb" id="fb-forgat">⏸ Forgatás leállítása</button>`, info: "Válassz egy réteget a gombokkal!" },
+  { kulcs: "toltesek", ikon: "⚡", cim: "Elektromos kölcsönhatás: vonzás és taszítás", fn: toltesek, infoId: "tolt-info",
+    leiras: "Az azonos töltésű testek taszítják, az ellentétes töltésűek vonzzák egymást. A sárga nyilak az erőhatás irányát mutatják, közelebb erősebbek.",
+    vezerlo: `<button class="gomb gomb--tomor" data-tolt="vonzas">+ és − (ellentétes)</button><button class="gomb gomb--tomor" data-tolt="taszitas">+ és + (azonos)</button>`, info: "" },
+  { kulcs: "szelerom", ikon: "🌬️", cim: "Szélerőműpark", fn: szelerom, infoId: "sz-info",
+    leiras: "A szél forgatja a lapátokat, a generátor pedig villamos energiát termel. Állítsd a szél erejét, és figyeld, mi történik! <i>A számok szemléltetők.</i>",
+    vezerlo: `<label>Szélsebesség <input type="range" id="sz-csuszka" min="0" max="20" step="1" value="8"></label><span style="display:inline-block;width:140px;height:12px;border-radius:6px;background:#d9dee8;overflow:hidden" title="Termelt teljesítmény"><i id="sz-sav" style="display:block;height:12px;width:0;background:#2f9e44"></i></span>`, info: "" },
+];
+/** Egy animációs kártya (cím, leírás, 3D vászon, vezérlők, információs sáv). */
+function animKartya(a) {
+  const d = document.createElement("section"); d.className = "panel animkartya mot-anim"; d.id = a.kulcs;
+  d.innerHTML = `<h3>${a.ikon} ${a.cim}</h3><p>${a.leiras}</p><div class="anim" id="${a.kulcs}-vaszon"></div>
+    <div class="vezerlo">${a.vezerlo}</div><div class="animinfo"${a.infoId ? ` id="${a.infoId}"` : ""}>${a.info}</div>`;
+  return d;
+}
+/** Animáció beillesztése: `hova` = szülő (a végére) vagy egy elem, ami UTÁN kerül (mod = "utan"). Visszaad: kezelő (torol). */
+function animBeszur(kulcs, hova, mod = "vegere") {
+  const a = ANIMACIOK.find((x) => x.kulcs === kulcs); if (!a || !hova) return { elem: hova, torol() {} };
+  MOT3D.stilus();
+  const k = animKartya(a);
+  if (mod === "utan") hova.insertAdjacentElement("afterend", k); else hova.appendChild(k);
+  const h = MOT3D.jelenet(k.querySelector(".anim"), a.fn, true);
+  return { elem: k, torol() { h.torol(); k.remove(); } };
 }

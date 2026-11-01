@@ -16,8 +16,8 @@ const LOGO_FAJL = "assets/img/logo.png";   // ha nincs ott a fájl, a „MOT" je
 
 const $ = (v) => document.querySelector(v);
 
-/** Fejléc + menü + lábléc kirajzolása. `aktiv` = az aktuális menüpont fájlneve. */
-function oldalKeret(aktiv) {
+/** Fejléc + menü + lábléc kirajzolása. `aktiv` = az aktuális menüpont fájlneve; `tema` = a 3D háttér témája (fold, mertan, konyv, hang). */
+function oldalKeret(aktiv, tema = "fold") {
   $("#fejlec").className = "fejlec";
   $("#fejlec").innerHTML = `
     <div class="sav fejlec__sor">
@@ -30,6 +30,16 @@ function oldalKeret(aktiv) {
       <nav class="menu">${MENU.map((m) =>
         `<a href="${m.fel}" class="${m.fel === aktiv ? "aktiv" : ""}">${m.nev}</a>`).join("")}</nav>
     </div>`;
+  /* 3D: kapcsoló a fejlécben + háttér a kék sávban (ha a three.js és a 3d.js be van töltve) */
+  if (typeof MOT3D !== "undefined" && typeof THREE !== "undefined") {
+    MOT3D.kapcsolo($(".fejlec__sor"));
+    const sav = $(".bevezeto");
+    if (sav) {
+      let hely = sav.querySelector(".hero3d");
+      if (!hely) { hely = document.createElement("div"); hely.className = "hero3d"; hely.setAttribute("aria-hidden", "true"); sav.prepend(hely); }
+      MOT3D.jelenet(hely, (t) => hatter3d(t, tema));
+    }
+  }
   $("#lablec").className = "lablec";
   $("#lablec").innerHTML = "MOT – Magyar OkosTankönyv · A tankönyvek az Oktatási Hivatal kiadványai, a feladatok saját készítésűek.";
 }

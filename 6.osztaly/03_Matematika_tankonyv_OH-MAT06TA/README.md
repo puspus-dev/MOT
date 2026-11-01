@@ -2,9 +2,9 @@
 
 Hivatalos oldal: https://www.tankonyvkatalogus.hu/tankonyv/OH-MAT06TA
 
-- [Egesz szamok oszthatosag](01_Egesz_szamok_oszthatosag/01_Egesz_szamok_oszthatosag.pdf) · [feladatok](01_Egesz_szamok_oszthatosag/feladatok.html)
-- [Tortek](02_Tortek/02_Tortek.pdf) · [feladatok](02_Tortek/feladatok.html)
-- [Geometria tengelyes tukrozes](03_Geometria_tengelyes_tukrozes/03_Geometria_tengelyes_tukrozes.pdf) · [feladatok](03_Geometria_tengelyes_tukrozes/feladatok.html)
-- [Arany szazalek szoveges](04_Arany_szazalek_szoveges/04_Arany_szazalek_szoveges.pdf) · [feladatok](04_Arany_szazalek_szoveges/feladatok.html)
-- [Kerulet terulet felszin terfogat](05_Kerulet_terulet_felszin_terfogat/05_Kerulet_terulet_felszin_terfogat.pdf) · [feladatok](05_Kerulet_terulet_felszin_terfogat/feladatok.html)
-- [Statisztika](06_Statisztika/06_Statisztika.pdf) · [feladatok](06_Statisztika/feladatok.html)
+- [Egesz szamok oszthatosag](01_Egesz_szamok_oszthatosag/01_Egesz_szamok_oszthatosag.pdf) · [feladatok](okostankonyv.html#feladat-01_Egesz_szamok_oszthatosag)
+- [Tortek](02_Tortek/02_Tortek.pdf) · [feladatok](okostankonyv.html#feladat-02_Tortek)
+- [Geometria tengelyes tukrozes](03_Geometria_tengelyes_tukrozes/03_Geometria_tengelyes_tukrozes.pdf) · [feladatok](okostankonyv.html#feladat-03_Geometria_tengelyes_tukrozes)
+- [Arany szazalek szoveges](04_Arany_szazalek_szoveges/04_Arany_szazalek_szoveges.pdf) · [feladatok](okostankonyv.html#feladat-04_Arany_szazalek_szoveges)
+- [Kerulet terulet felszin terfogat](05_Kerulet_terulet_felszin_terfogat/05_Kerulet_terulet_felszin_terfogat.pdf) · [feladatok](okostankonyv.html#feladat-05_Kerulet_terulet_felszin_terfogat)
+- [Statisztika](06_Statisztika/06_Statisztika.pdf) · [feladatok](okostankonyv.html#feladat-06_Statisztika)

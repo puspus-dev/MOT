@@ -14,10 +14,12 @@ segitseg.html, impresszum.html, dokumentacio.html
 data/konyvek.js       Tankönyvek és fejezetek (MOT_KONYVEK)
 data/diagramok.js     Fogalomtérképek (MOT_DIAGRAMOK)
 assets/css/style.css  Közös stíluslap (színek az 1. blokkban)
-assets/js/            kozos.js, fooldal.js, konyv.js, diagram.js, elozmenyek.js, 3d.js, animaciok.js
+assets/js/            kozos.js, fooldal.js, konyv.js, diagram.js, elozmenyek.js,
+                      3d.js (3D jelenetek + kapcsoló), animaciok.js, hatter.js, feladat.js (feladatmotor)
 assets/vendor/mxgraph Harmadik féltől: mxGraph (Apache 2.0)
 assets/vendor/three   Harmadik féltől: three.js r147 (MIT)
-6.osztaly/<tankonyv>/ PDF-ek, okostankonyv.html, fejezetenként feladatok.html
+6.osztaly/<tankonyv>/ PDF-ek + okostankonyv.html (tananyag, feladatok és 3D egy fájlban)
+                      (Angol és Hittan: önálló feladatok.html, mert nincs hozzájuk okostankönyv)
 ```
 
 ## 2. URL-paraméterek
@@ -27,8 +29,9 @@ assets/vendor/three   Harmadik féltől: three.js r147 (MIT)
 | `konyv.html?id=<könyv-id>` | Egy tankönyv tartalomjegyzéke. Ismeretlen id esetén hibaüzenet. |
 | `diagram.html` | A fogalomtérképek listája. |
 | `diagram.html?id=<diagram-id>` | Egy fogalomtérkép megjelenítése. |
-| `animaciok.html#<név>` | A 3D animációk oldala a megadott kártyához görget: `naprendszer`, `evszakok`, `foldbelseje`, `toltesek`. |
+| `animaciok.html#<név>` | A 3D animációk oldala a megadott kártyához görget: `naprendszer`, `evszakok`, `holdfazisok`, `foldbelseje`, `toltesek`, `szelerom`. |
 | `6.osztaly/<könyv>/okostankonyv.html#oldal-<N>` | Az okostankönyv N. oldalára ugrik (N = PDF-oldalszám). |
+| `6.osztaly/<könyv>/okostankonyv.html#feladat-<id>` | Megnyitja az okostankönyvben az adott fejezet feladatsorát. |
 
 ## 3. Tankönyvek: `data/konyvek.js`
 
@@ -52,14 +55,32 @@ Egy **fejezet**:
 |---|---|---|
 | `cim` | string | A fejezet neve. |
 | `pdf` | string \| null | A fejezetre vágott PDF útvonala. |
-| `feladat` | string \| null | A `feladatok.html` útvonala (az **eredménytár kulcsa**, lásd 5.). `null`, ha a feladat csak témakörönként van. |
+| `feladat` | string \| null | A feladatsor hivatkozása, és egyben az **eredménytár kulcsa** (lásd 5.). Okostankönyves könyvnél `…/okostankonyv.html#feladat-<id>`, az Angol és Hittan könyveknél a `feladatok.html` útvonala. `null`, ha csak témakörönként van feladat. |
 | `csoport` | string | A lecke témaköre. Ha meg van adva, a tartalomjegyzék témakör-fejlécekkel csoportosít; a fejléc a `csoportok` megfelelő feladatsorára mutat. |
 | `oldalak` | string | Megjelenített szöveg, pl. `PDF 9–15. oldal`. |
 | `elso_oldal` | number | A fejezet első PDF-oldala; ide ugrik az okostankönyv-gomb. |
 
-## 4. Feladatsorok: a `feladatok.html` kérdésformátuma
+## 4. Feladatsorok (az okostankönyvekbe építve)
 
-Minden feladatsor oldalán egy `const D = [...]` tömb tartalmazza a kérdéseket. Három típus van:
+A feladatok **az okostankönyv HTML-jében** vannak: a „✏️ Interaktív feladatok" panelben fülek jelennek meg fejezetenként, és minden fejezet végén egy „✏️ Feladatok: …" gomb nyitja meg az adott feladatsort. Keresés közben ezek a gombok elrejtődnek. A motor az `assets/js/feladat.js` (`MOTFeladat`).
+
+Az oldal végén egy `MOT_FELADATOK` tömb tartalmazza az adatot:
+
+```json
+{ "id": "02_Toldi", "cim": "Toldi", "konyv": "Irodalom",
+  "key": "6.osztaly/<könyv>/okostankonyv.html#feladat-02_Toldi",
+  "utan": 175, "d": [ ...kérdések... ] }
+```
+
+| Mező | Jelentés |
+|---|---|
+| `id` | Egyedi azonosító; a `#feladat-<id>` hivatkozás ezt használja. |
+| `cim`, `konyv` | A fejezet és a könyv neve (az Előzményekben látszik). |
+| `key` | Az eredménytár kulcsa; megegyezik a `konyvek.js` `feladat` mezőjével. |
+| `utan` | Az oldalszám, amely **után** megjelenik a fejezetvégi gomb. |
+| `d` | A kérdések listája (lásd lent). |
+
+Kérdéstípusok:
 
 ```json
 { "t": "c", "q": "Kérdés?", "o": ["helyes", "rossz1", "rossz2"], "a": 0 }
@@ -67,11 +88,11 @@ Minden feladatsor oldalán egy `const D = [...]` tömb tartalmazza a kérdéseke
 { "t": "m", "q": "Párosítsd!", "p": [["bal1", "jobb1"], ["bal2", "jobb2"]] }
 ```
 
-* **`c` – feleletválasztós**: `o` a válaszlista, `a` a helyes elem **indexe**. A sorrendet az oldal betöltéskor véletlenszerűen keveri.
-* **`f` – beírós**: `a` az elfogadott válaszok listája. Az összehasonlításnál a kis- és nagybetű, a szóközök és a tizedesvessző/pont különbsége nem számít.
-* **`m` – párosítás**: `p` a (bal, jobb) párok listája. A jobb oldali értékek legördülő menüből választhatók; a kérdés akkor számít jónak, ha minden pár helyes.
+* **`c` – feleletválasztós**: `o` a válaszlista, `a` a helyes elem **indexe**. A sorrendet az oldal véletlenszerűen keveri.
+* **`f` – beírós**: `a` az elfogadott válaszok listája. A kis- és nagybetű, a szóközök és a tizedesvessző/pont különbsége nem számít.
+* **`m` – párosítás**: `p` a (bal, jobb) párok listája, a jobb oldali értékek legördülő menüből választhatók; minden pár helyes kell.
 
-Egy kérdés 1 pontot ér. A feladatsor végén az oldal kiírja az eredményt, és elmenti (lásd 5.).
+Egy kérdés 1 pontot ér. A `MOTFeladat` függvényei: `kviz(adat, doboz, kesz)` (egy feladatsor kirajzolása), `panel(szulo, adatok)` (fülek + kvíz), `vegeGomb(adat, panel)` (fejezetvégi gomb), `okostankonyvbe(adatok)` (a kész, statikus okostankönyv-oldalakba építi be a panelt a „Gyakorlás" elé és a gombokat a fejezetek végére).
 
 ## 5. Eredménytár (localStorage)
 
@@ -118,12 +139,17 @@ A 3D jelenetek a [three.js](https://threejs.org/) r147-es verzióját használj�
 
 | Függvény | Jelenet |
 |---|---|
-| `hero3d(tarolo)` | Főoldali háttér: forgó Föld keringő Holddal (nem interaktív). |
+| `hatter3d(tarolo, tema)` | Háttér a kék sávokban. Témák: `fold` (Föld + Hold), `mertan` (forgó testek), `konyv` (lebegő könyvek), `hang` (hangszínszabályzó-oszlopok). |
 | `naprendszer(tarolo)` | Nap–Föld–Hold, sebességcsúszka, tengely és pálya ki/be. |
+| `holdfazisok(tarolo)` | A Hold fázisai: pályacsúszka, a Földről látott alak képe és a fázis neve. |
+| `szelerom(tarolo)` | Szélerőműpark: szélsebesség-csúszka, forgó lapátok, termelt teljesítmény. |
 | `evszakok(tarolo)` | A Föld keringése döntött tengellyel; gombok az évszakokra, csúszka a pályán, magyarázat. |
 | `foldBelseje(tarolo)` | Kivágott gömb a Föld rétegeivel; réteg kiemelése gombbal. |
 | `toltesek(tarolo)` | Elektromos vonzás és taszítás nyilakkal. |
 
+* **3D ki-be kapcsoló (`MOT3D`):** minden 3D elem a `MOT3D.jelenet(tarolo, epitoFuggveny, uzenet)`-en át indul, ezért egyetlen kapcsolóval (a fejlécben, ill. az önálló oldalak kék sávjában) az összes 3D elem egyszerre kapcsolható ki és be. Kikapcsoláskor a jelenet leáll, és a WebGL-erőforrások felszabadulnak. Az állapot a `localStorage`-ban van (`mot_3d` = `be`/`ki`); alapértelmezés: be, kivéve ha a böngészőben „mozgás csökkentése" van beállítva. További függvények: `MOT3D.kapcsolo(szulo)`, `MOT3D.be()`, `MOT3D.beallit(bool)`, `MOT3D.figyel(fn)`, `MOT3D.tema(tantargy)`.
+* **Animációs regiszter:** az `ANIMACIOK` tömb írja le az animációkat (`kulcs`, `ikon`, `cim`, `fn`, `leiras`, `vezerlo`, `info`). Az `animBeszur(kulcs, hova, mod)` bárhová beilleszt egy animációkártyát (`mod = "utan"`: az adott elem után). Így kerülnek a 3D animációk a Természettudomány okostankönyv megfelelő leckéi után is.
+* **Önálló oldalakon** (Angol és Hittan feladatok, okostankönyvek) a `hatter.js` hozza létre a 3D sávot a kapcsolóval: `<script src=".../hatter.js" data-tema="fold|mertan|konyv|hang">` (a `three.min.js` és a `3d.js` után).
 * **Közös színpad:** `szinpad(tarolo, opciok)` hozza létre a renderert és a kamerát. Húzással forgatható, görgetéssel nagyítható; a ciklus csak akkor fut, amikor a tároló látszik. Visszaad egy objektumot, amelyen `ciklus(fn)`-nel adhatsz hozzá képkockánkénti frissítést (`fn(dt, ido)`).
 * **Beállítások:** `opciok.tavol` (kamera távolsága), `pitch`/`yaw` (kezdő nézet), `interaktiv` (false: nem forgatható), `csillagok` (csillagos háttér).
 * **Új jelenet:** írj egy `function sajatJelenet(tarolo)` függvényt a `3d.js`-ben (másolj egy meglévőt), tegyél az `animaciok.html`-be egy `<div class="anim" id="…-vaszon">` elemet, és hívd meg az `animaciok.js`-ben.
@@ -136,7 +162,8 @@ A 3D jelenetek a [three.js](https://threejs.org/) r147-es verzióját használj�
 2. **Új tankönyv:** vegyél fel egy új elemet a `MOT_KONYVEK` tömbbe, és hozz létre hozzá mappát a `6.osztaly/` alatt.
 3. **Új évfolyam:** írd be az `evfolyam` mezőbe az új értéket (pl. `7. osztály`), a Kezdőlap szűrője automatikusan felveszi.
 4. **Új fogalomtérkép:** másolj egy blokkot a `data/diagramok.js`-ben.
-5. **Új kérdés:** szerkeszd a megfelelő `feladatok.html` `const D = [...]` tömbjét a 4. fejezet formátuma szerint.
+5. **Új kérdés:** szerkeszd az okostankönyv-HTML végén lévő `MOT_FELADATOK` tömb megfelelő `d` listáját a 4. fejezet formátuma szerint.
+6. **Új animáció az okostankönyvben:** vegyél fel egy `{ "utan": <oldalszám>, "kulcs": "<animáció>" }` elemet az `ANIM` listába (Természettudomány), vagy hívd meg az `animBeszur(kulcs, elem, "utan")`-t.
 
 ## 9. Licencek
 

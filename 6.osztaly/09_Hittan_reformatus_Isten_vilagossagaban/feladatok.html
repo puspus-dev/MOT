@@ -14,4 +14,5 @@ if(x.t=='c'){const m=x.o.map((o,j)=>[o,j]).sort(()=>Math.random()-.5);m.forEach(
 else if(x.t=='f'){const r=document.createElement('div');r.className='r';r.innerHTML='<input placeholder="Válasz"><button class="b">Ellenőriz</button><span></span>';const[i1,bt,sp]=r.children;bt.onclick=()=>{if(d.dataset.d)return;const ok=x.a.map(N).includes(N(i1.value));sp.textContent=ok?'✔ Helyes!':'✘ Helyes válasz: '+x.a[0];sp.className=ok?'ok':'no';fin(ok,d)};d.appendChild(r)}
 else{const L=x.p.map(e=>e[1]).sort(()=>Math.random()-.5);const sel=[];x.p.forEach(e=>{const r=document.createElement('div');r.className='r';const s=document.createElement('select');s.innerHTML='<option value="">–</option>'+L.map(l=>'<option>'+l+'</option>').join('');r.append(e[0]+' → ',s);sel.push(s);d.appendChild(r)});
 const bt=document.createElement('button');bt.className='b';bt.textContent='Ellenőriz';bt.onclick=()=>{if(d.dataset.d)return;let ok=true;sel.forEach((s,j)=>{const g=s.value==x.p[j][1];if(!g)ok=false;s.className=g?'ok':'no'});fin(ok,d)};d.appendChild(bt)}
-c.appendChild(d)});</script></body></html>
+c.appendChild(d)});</script><script src="../../assets/vendor/three/three.min.js"></script><script src="../../assets/js/3d.js"></script><script src="../../assets/js/hatter.js" data-tema="konyv"></script>
+</body></html>

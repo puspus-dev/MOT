@@ -405,6 +405,23 @@ const MOT_KONYVEK = [
     ]
   },
   {
+    "id": "12_Enekeskonyv_enekkel",
+    "cim": "Énekeskönyv (Ezt használd!)",
+    "tantargy": "Ének-zene",
+    "evfolyam": "6.osztály",
+    "ikon": "🎵",
+    "szin": "#5120c5",
+    "okostankonyv": "6.osztaly/12_Enek_OH-ENZ06TA_Enekek/okostankonyv.html",
+    "fejezetek": [
+      {
+        "cim": "Énekeskönyv STABIL",
+        "pdf": "6.osztaly/12_Enek_OH-ENZ06TA_Enekek/OH-ENZ06TA__teljes.pdf",
+        "oldalak": "PDF 1-93. oldal",
+        "elso_oldal": 1
+      }
+    ]
+  },
+  {
     "id": "07_Enek_OH-ENZ06TA",
     "cim": "Ének-zene",
     "tantargy": "Ének-zene",

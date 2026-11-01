@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Énekeskönyv, énekek – MOT 6.osztály</title>
+<style>
+:root{
+  --fo:#1a5f7a; --kiemelo:#159895; --hatter:#f8fafc; --kartya:#ffffff;
+  --keret:#e2e8f0; --szoveg:#1e293b; --halvany:#64748b; --doboz:#fef9c3;
+  --sugar:12px;
+}
+@media(prefers-color-scheme:dark){
+  :root{--fo:#38bdf8;--kiemelo:#2dd4bf;--hatter:#0f172a;--kartya:#1e293b;
+  --keret:#334155;--szoveg:#e2e8f0;--halvany:#94a3b8;--doboz:#422006}
+}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.55 system-ui,sans-serif;background:var(--hatter);color:var(--szoveg)}
+img{max-width:100%;height:auto;border-radius:8px;margin:8px 0;display:block}
+/* ---------- FEJLÉC ÉS KERESŐ ---------- */
+.fejlec{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;padding:8px 16px;background:var(--kartya);border-bottom:1px solid var(--keret)}
+.fejlec b{color:var(--fo)}
+.fejlec input[type=search]{flex:1;min-width:180px;max-width:380px;margin-left:auto;padding:8px 14px;border:1px solid var(--keret);border-radius:999px;background:var(--hatter);color:var(--szoveg);font:inherit}
+
+/* ---------- ELRENDEZÉS: tartalomjegyzék + tartalom ---------- */
+.elrendezes{display:grid;grid-template-columns:250px minmax(0,1fr);gap:16px;max-width:1150px;margin:16px auto;padding:0 16px}
+@media(max-width:860px){.elrendezes{grid-template-columns:1fr}.tartalomjegyzek{position:static!important;max-height:none!important}}
+.tartalomjegyzek{position:sticky;top:60px;align-self:start;max-height:calc(100vh - 80px);overflow:auto;padding:14px;background:var(--kartya);border:1px solid var(--keret);border-radius:var(--sugar)}
+.tartalomjegyzek h4{margin:12px 0 4px;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--halvany)}
+.tartalomjegyzek a{display:block;padding:3px 0;text-decoration:none;color:inherit;font-size:15px}
+.tartalomjegyzek a:hover{color:var(--fo)}
+
+/* ---------- LECKÉK ÉS DOBOZOK ---------- */
+.kartya{background:var(--kartya);border:1px solid var(--keret);border-radius:var(--sugar);padding:6px 20px 16px;margin-bottom:16px}
+.lecke[hidden]{display:none}
+.fontos{background:var(--doboz);border-left:5px solid #f0b400;border-radius:8px;padding:10px 14px;margin:14px 0}
+.kiserlet{border:2px dashed var(--kiemelo);border-radius:10px;padding:10px 14px;margin:14px 0}
+table.adat{border-collapse:collapse;margin:12px 0}
+table.adat th,table.adat td{border:1px solid var(--keret);padding:6px 12px;text-align:left}
+mark{background:#ffe58a;color:#000;border-radius:3px}
+.jegyzet textarea{width:100%;min-height:140px;padding:10px;border:1px solid var(--keret);border-radius:10px;background:var(--hatter);color:var(--szoveg);font:inherit}
+.gomb{padding:8px 16px;border:0;border-radius:999px;background:var(--kiemelo);color:#fff;font:600 15px system-ui,sans-serif;cursor:pointer}
+.demo-jelzo{display:inline-block;margin-left:8px;padding:2px 10px;border-radius:999px;background:#f0b400;color:#000;font-size:13px;font-weight:700;vertical-align:middle}
+</style>
+</head>
+
+<body>
+<div class="fejlec">
+  <b>MOT</b> · <span id="fejlec-cim"></span>
+  <a href="../index.html">← Kezdőlap</a>
+  <input id="kereso" type="search" placeholder="Keresés a tananyagban…" autocomplete="off">
+</div>
+
+<div class="elrendezes">
+  <nav class="tartalomjegyzek" id="tartalomjegyzek"></nav>
+  <main>
+    <div class="kartya"><h1 id="konyv-cim"></h1><p id="konyv-leiras" style="color:var(--halvany)"></p></div>
+    <div class="kartya jegyzet"><h2>📝 Saját jegyzet</h2>
+      <textarea id="jegyzet" placeholder="Írd ide a saját jegyzeteidet…"></textarea>
+      <p style="margin-top:8px"><button class="gomb" id="jegyzet-mentes">Jegyzet letöltése</button></p>
+    </div>
+    <div id="leckek"></div>
+    <div id="feladatok" class="kartya" style="display:none"></div>
+  </main>
+</div>
+
+<script>
+const KONYV = {
+  cim: "Énekeskönyv 6.",
+  leiras: "Tantárgy: Ének-zene · Tankönyv a 6. évfolyam számára · OH-ENZ06TA",
+  azonosito: "12_Enek_OH-ENZ06TA",
+  tema: "zene",
+
+  fejezetek: [
+    {
+      id: "emlekezet",
+      cim: "Emlékezetfrissítés",
+      leckek: [
+        {
+          id: "emlekezetfriss",
+          cim: "Emlékezetfrissítés",
+          html: `<img src="OH-ENZ06TA__teljes_page-0005-Emlekezetfriss.jpg" alt="Emlékezetfrissítés">`
+        }
+      ]
+    },
+    {
+      id: "nepzenvilaga",
+      cim: "A népzene világa",
+      leckek: [
+        {
+          id: "enekeljunk",
+          cim: "Énekeljünk, énekeljünk!",
+          html: `<img src="OH-ENZ06TA__teljes_page-0007-Enekeljunkenekeljunk.jpg" alt="Énekeljünk, énekeljünk!">`
+        },
+        {
+          id: "osszelerik",
+          cim: "Ősszel érik, babám",
+          html: `<img src="OH-ENZ06TA__teljes_page-0008-osszelerikbabam.jpg" alt="Ősszel érik, babám">`
+        },
+        {
+          id: "esteaszekelynel",
+          cim: "Bartók Béla: Este a székelyeknél",
+          html: `<img src="OH-ENZ06TA__teljes_page-0009-esteaszekelyeknel.jpg" alt="Bartók Béla: Este a székelyeknél">`
+        },
+        {
+          id: "nezdmeglanyom",
+          cim: "Nézd meg, lányom, nézd meg jól",
+          html: `<img src="OH-ENZ06TA__teljes_page-0010-nezdmeglanyomnezdmegjol.jpg" alt="Nézd meg, lányom, nézd meg jól">`
+        },
+        {
+          id: "zeneiabc",
+          cim: "Zenei ábécé",
+          html: `<img src="OH-ENZ06TA__teljes_page-0011-zeneiabc.jpg" alt="Zenei ábécé 1">
+                 <img src="OH-ENZ06TA__teljes_page-0012-zeneiabc2.jpg" alt="Zenei ábécé 2">`
+        },
+        {
+          id: "deszeretnek",
+          cim: "De szeretnék páva lenni",
+          html: `<img src="OH-ENZ06TA__teljes_page-0013-deszeretnekpavalenni.jpg" alt="De szeretnék páva lenni">`
+        },
+        {
+          id: "hejigazitsad",
+          cim: "Hej, igazítsad",
+          html: `<img src="OH-ENZ06TA__teljes_page-0015-hejigazitsad.jpg" alt="Hej, igazítsad 1">
+                 <img src="OH-ENZ06TA__teljes_page-0016-hejigazitsad2.jpg" alt="Hej, igazítsad 2">`
+        },
+        {
+          id: "estevanmar",
+          cim: "Este van már",
+          html: `<img src="OH-ENZ06TA__teljes_page-0017-estevanmar.jpg" alt="Este van már">`
+        },
+        {
+          id: "ahorgosicsarda",
+          cim: "A horgosi csárda ki van festve",
+          html: `<img src="OH-ENZ06TA__teljes_page-0018-ahorgosicsardakivanfestve.jpg" alt="A horgosi csárda ki van festve">`
+        },
+        {
+          id: "elmentaketlany",
+          cim: "Elment a két lány",
+          html: `<img src="OH-ENZ06TA__teljes_page-0019-elmentaketlany.jpg" alt="Elment a két lány 1">
+                 <img src="OH-ENZ06TA__teljes_page-0020-elmentaketlany2.jpg" alt="Elment a két lány 2">`
+        },
+        {
+          id: "avidrocki",
+          cim: "A Vidrócki híres nyája",
+          html: `<img src="OH-ENZ06TA__teljes_page-0021-avidrockihiresnyaja.jpg" alt="A Vidrócki híres nyája 1">
+                 <img src="OH-ENZ06TA__teljes_page-0022-avidrocki2.jpg" alt="A Vidrócki híres nyája 2">
+                 <img src="OH-ENZ06TA__teljes_page-0023-avidrocki3.jpg" alt="A Vidrócki híres nyája 3">`
+        },
+        {
+          id: "marvidrocki",
+          cim: "Már Vidrócki emelgeti a bankót",
+          html: `<img src="OH-ENZ06TA__teljes_page-0024-marvidrockiemelgetiabankot.jpg" alt="Már Vidrócki emelgeti a bankót">`
+        },
+        {
+          id: "elmegyek",
+          cim: "Elmegyek, elmegyek, el is van vágyásom",
+          html: `<img src="OH-ENZ06TA__teljes_page-0025-elmegyekelmegyekelisvanvagyasom.jpg" alt="Elmegyek, elmegyek, el is van vágyásom">`
+        },
+        {
+          id: "madarkamadarka",
+          cim: "Madárka, madárka",
+          html: `<img src="OH-ENZ06TA__teljes_page-0026-madarkamadarka.jpg" alt="Madárka, madárka 1">
+                 <img src="OH-ENZ06TA__teljes_page-0027-madarkamadarka2.jpg" alt="Madárka, madárka 2">`
+        },
+        {
+          id: "sejatarireten",
+          cim: "Sej, a tari réten",
+          html: `<img src="OH-ENZ06TA__teljes_page-0028-sejatarireten.jpg" alt="Sej, a tari réten">`
+        },
+        {
+          id: "kettyukom",
+          cim: "Két tyúkom tavali – Hallod-e, te, szolgáló",
+          html: `<img src="OH-ENZ06TA__teljes_page-0029-kettyukomtavali-hallodeteszolgalo.jpg" alt="Két tyúkom tavali – Hallod-e, te, szolgáló">`
+        },
+        {
+          id: "magyarnepihangszerek",
+          cim: "Magyar népi hangszerek",
+          html: `<img src="OH-ENZ06TA__teljes_page-0030-magyarnepihangszerek.jpg" alt="Magyar népi hangszerek">`
+        },
+        {
+          id: "avargaekablakja",
+          cim: "A Vargáék ablakja",
+          html: `<img src="OH-ENZ06TA__teljes_page-0031-avargaekablakja.jpg" alt="A Vargáék ablakja">`
+        },
+        {
+          id: "kallaikettos",
+          cim: "Kodály Zoltán: Kállai kettős",
+          html: `<img src="OH-ENZ06TA__teljes_page-0032-kallaikettos.jpg" alt="Kodály Zoltán: Kállai kettős 1">
+                 <img src="OH-ENZ06TA__teljes_page-0033-kallaikettos2.jpg" alt="Kodály Zoltán: Kállai kettős 2">`
+        },
+        {
+          id: "nemvagyok",
+          cim: "Nem vagyok én senkinek sem adósa",
+          html: `<img src="OH-ENZ06TA__teljes_page-0034-nemvagyokensenkineksemadosa.jpg" alt="Nem vagyok én senkinek sem adósa">`
+        },
+        {
+          id: "tavasziszel",
+          cim: "Tavaszi szél",
+          html: `<img src="OH-ENZ06TA__teljes_page-0035-tavasziszel.jpg" alt="Tavaszi szél">`
+        },
+        {
+          id: "ugyanedes",
+          cim: "Bárdos Lajos: Ugyan, édes komámasszony",
+          html: `<img src="OH-ENZ06TA__teljes_page-0036-ugyanedeskomamasszony.jpg" alt="Bárdos Lajos: Ugyan, édes komámasszony">`
+        },
+        {
+          id: "tyukkergeto",
+          cim: "Kodály Zoltán: Tyúkkergető",
+          html: `<img src="OH-ENZ06TA__teljes_page-0037-tyukkergeto.jpg" alt="Kodály Zoltán: Tyúkkergető">`
+        },
+        {
+          id: "dunaparton",
+          cim: "Dunaparton van egy malom",
+          html: `<img src="OH-ENZ06TA__teljes_page-0038-dunapartonvanegymalom.jpg" alt="Dunaparton van egy malom">`
+        },
+        {
+          id: "nepzeneiutazas",
+          cim: "Népzenei projekt, népzenei utazás",
+          html: `<img src="OH-ENZ06TA__teljes_page-0039-nepzeneiutazas.jpg" alt="Népzenei projekt, népzenei utazás">`
+        },
+        {
+          id: "jolovaskatona",
+          cim: "A jó lovas katonának",
+          html: `<img src="OH-ENZ06TA__teljes_page-0040-jolovaskatonanak.jpg" alt="A jó lovas katonának">`
+        },
+        {
+          id: "egrihistoria",
+          cim: "Tinódi Lantos Sebestyén: Egri históriának summája",
+          html: `<img src="OH-ENZ06TA__teljes_page-0041-egrihistoriasumma.jpg" alt="Tinódi Lantos Sebestyén: Egri históriának summája">`
+        },
+        {
+          id: "kiskinepei",
+          cim: "Lengyel László-játék – Ki s ki népei vagytok?",
+          html: `<img src="OH-ENZ06TA__teljes_page-0043-kiskinepeivagytok.jpg" alt="Ki s ki népei vagytok? 1">
+                 <img src="OH-ENZ06TA__teljes_page-0044-kiskinepeivagytok2.jpg" alt="Ki s ki népei vagytok? 2">
+                 <img src="OH-ENZ06TA__teljes_page-0045-kiskinepeivagytok3.jpg" alt="Ki s ki népei vagytok? 3">
+                 <img src="OH-ENZ06TA__teljes_page-0046-kiskinepeivagytok4.jpg" alt="Ki s ki népei vagytok? 4">
+                 <img src="OH-ENZ06TA__teljes_page-0047-kiskinepeivagytok5.jpg" alt="Ki s ki népei vagytok? 5">`
+        },
+        {
+          id: "szozat",
+          cim: "Szózat",
+          html: `<img src="OH-ENZ06TA__teljes_page-0048-szozat.jpg" alt="Szózat">`
+        },
+        {
+          id: "akisjezus",
+          cim: "A kis Jézus megszületett – Karácsony ünnepén",
+          html: `<img src="OH-ENZ06TA__teljes_page-0049-akisjezus-karacsonyunnepen.jpg" alt="A kis Jézus megszületett – Karácsony ünnepén">`
+        },
+        {
+          id: "afarsangi",
+          cim: "A, a, a, a farsangi napokban",
+          html: `<img src="OH-ENZ06TA__teljes_page-0050-afarsanginapokban.jpg" alt="A, a, a, a farsangi napokban">`
+        },
+        {
+          id: "szimmetria",
+          cim: "Szimmetria",
+          html: `<img src="OH-ENZ06TA__teljes_page-0051-szimmetria.jpg" alt="Szimmetria">`
+        },
+        {
+          id: "szentgergely",
+          cim: "Gergelyjárás – Szent Gergely doktornak",
+          html: `<img src="OH-ENZ06TA__teljes_page-0052-szentgergelydoktornak.jpg" alt="Szent Gergely doktornak">`
+        },
+        {
+          id: "azerthogyen",
+          cim: "Azért, hogy én huszár vagyok",
+          html: `<img src="OH-ENZ06TA__teljes_page-0053-azerthogyenhuszarvagyok.jpg" alt="Azért, hogy én huszár vagyok">`
+        },
+        {
+          id: "orvendetes",
+          cim: "Örvendetes napunk támadt",
+          html: `<img src="OH-ENZ06TA__teljes_page-0054-orvendetesnapunktamadt.jpg" alt="Örvendetes napunk támadt">`
+        },
+        {
+          id: "nyarkanon",
+          cim: "John of Fornsete: Nyárkánon (1240 körül)",
+          html: `<img src="OH-ENZ06TA__teljes_page-0055-nyarkakon.jpg" alt="Nyárkánon">`
+        },
+        {
+          id: "falusijokedv",
+          cim: "Joseph Haydn: Falusi jókedv",
+          html: `<img src="OH-ENZ06TA__teljes_page-0056-falusijokedv.jpg" alt="Joseph Haydn: Falusi jókedv 1">
+                 <img src="OH-ENZ06TA__teljes_page-0057-falusijokedv2.jpg" alt="Joseph Haydn: Falusi jókedv 2">`
+        },
+        {
+          id: "fafolott",
+          cim: "Fa fölött, fa alatt",
+          html: `<img src="OH-ENZ06TA__teljes_page-0058-fafolottfaalatt.jpg" alt="Fa fölött, fa alatt">`
+        },
+        {
+          id: "szepcsillagos",
+          cim: "Szép csillagos az ég",
+          html: `<img src="OH-ENZ06TA__teljes_page-0059-szepcsillagosazeg.jpg" alt="Szép csillagos az ég">`
+        }
+      ]
+    },
+    {
+      id: "zenetortenet",
+      cim: "Barangolás a zenetörténetben",
+      leckek: [
+        {
+          id: "gagliarda",
+          cim: "Hans Leo Hassler: Gagliarda",
+          html: `<img src="OH-ENZ06TA__teljes_page-0061-gagliarda.jpg" alt="Hans Leo Hassler: Gagliarda">`
+        },
+        {
+          id: "kapuvariverbunk",
+          cim: "Kapuvári verbunk",
+          html: `<img src="OH-ENZ06TA__teljes_page-0062-kapuvariverbunk.jpg" alt="Kapuvári verbunk">`
+        },
+        {
+          id: "vizizene",
+          cim: "Händel: Vízizene – D-dúr szvit I. tétel",
+          html: `<img src="OH-ENZ06TA__teljes_page-0063-vizizene.jpg" alt="Händel: Vízizene">`
+        },
+        {
+          id: "ustdobutes",
+          cim: "Joseph Haydn: G-dúr „Üstdobütés” szimfónia (No. 94) II. tétel",
+          html: `<img src="OH-ENZ06TA__teljes_page-0065-ustdobutes.jpg" alt="Haydn: Üstdobütés szimfónia 1">
+                 <img src="OH-ENZ06TA__teljes_page-0066-ustdobutes2.jpg" alt="Haydn: Üstdobütés szimfónia 2">`
+        },
+        {
+          id: "avarazsfuv",
+          cim: "W. A. Mozart: A varázsfuvola",
+          html: `<img src="OH-ENZ06TA__teljes_page-0067-avarazsfuv.jpg" alt="Mozart: A varázsfuvola 1">
+                 <img src="OH-ENZ06TA__teljes_page-0068-avarazsfuv2.jpg" alt="Mozart: A varázsfuvola 2">
+                 <img src="OH-ENZ06TA__teljes_page-0069-avarazsfuv3.jpg" alt="Mozart: A varázsfuvola 3">
+                 <img src="OH-ENZ06TA__teljes_page-0070-avarazsfuv4.jpg" alt="Mozart: A varázsfuvola 4">
+                 <img src="OH-ENZ06TA__teljes_page-0071-avarazsfuv5.jpg" alt="Mozart: A varázsfuvola 5">`
+        },
+        {
+          id: "hunyadilaszlo",
+          cim: "Erkel Ferenc: Hunyadi László",
+          html: `<img src="OH-ENZ06TA__teljes_page-0072-hunyadilaszlo.jpg" alt="Erkel Ferenc: Hunyadi László">`
+        },
+        {
+          id: "magyarrapszodia",
+          cim: "Liszt Ferenc: 2. magyar rapszódia",
+          html: `<img src="OH-ENZ06TA__teljes_page-0073-magyarrapszodia.jpg" alt="Liszt Ferenc: 2. magyar rapszódia">`
+        },
+        {
+          id: "moldva",
+          cim: "Bedřich Smetana: Moldva",
+          html: `<img src="OH-ENZ06TA__teljes_page-0074-moldva.jpg" alt="Smetana: Moldva 1">
+                 <img src="OH-ENZ06TA__teljes_page-0075-moldva2.jpg" alt="Smetana: Moldva 2">`
+        },
+        {
+          id: "variaciokesfuga",
+          cim: "Benjamin Britten: Variációk és fúga egy Purcell-témára",
+          html: `<img src="OH-ENZ06TA__teljes_page-0076-variaciokesfuga.jpg" alt="Britten: Variációk és fúga 1">
+                 <img src="OH-ENZ06TA__teljes_page-0077-variaciokesfuga2.jpg" alt="Britten: Variációk és fúga 2">`
+        }
+      ]
+    },
+    {
+      id: "jatekok",
+      cim: "Játékok és összefoglaló",
+      leckek: [
+        {
+          id: "jatekritmusdallam",
+          cim: "Játékok ritmussal, dallammal",
+          html: `<img src="OH-ENZ06TA__teljes_page-0080-jatekritmusdallam.jpg" alt="Játékok ritmussal, dallammal 1">
+                 <img src="OH-ENZ06TA__teljes_page-0081-jatekritmusdallam2.jpg" alt="Játékok ritmussal, dallammal 2">
+                 <img src="OH-ENZ06TA__teljes_page-0082-jatekritmusdallam3.jpg" alt="Játékok ritmussal, dallammal 3">`
+        },
+        {
+          id: "mittanultunk",
+          cim: "Mit tanultatok 5–6. osztályban?",
+          html: `<img src="OH-ENZ06TA__teljes_page-0083-mittanultunk.jpg" alt="Mit tanultatok 5–6. osztályban? 1">
+                 <img src="OH-ENZ06TA__teljes_page-0084-mittanultunk2.jpg" alt="Mit tanultatok 5–6. osztályban? 2">
+                 <img src="OH-ENZ06TA__teljes_page-0085-mittanultunk3.jpg" alt="Mit tanultatok 5–6. osztályban? 3">`
+        },
+        {
+          id: "szomagy",
+          cim: "Szómagyarázat",
+          html: `<img src="OH-ENZ06TA__teljes_page-0086-szomagy.jpg" alt="Szómagyarázat">`
+        },
+        {
+          id: "szakkif",
+          cim: "Szakkifejezések mutatója",
+          html: `<img src="OH-ENZ06TA__teljes_page-0087-szakkif.jpg" alt="Szakkifejezések mutatója">`
+        }
+      ]
+    }
+  ]
+};
+
+const $ = (v) => document.querySelector(v);
+
+/* ---- fejléc, cím, tartalomjegyzék ---- */
+document.title = KONYV.cim + " – MOT";
+$("#fejlec-cim").textContent = KONYV.cim;
+$("#konyv-cim").textContent = KONYV.cim;
+$("#konyv-leiras").textContent = KONYV.leiras;
+$("#tartalomjegyzek").innerHTML = `<a href="#feladatok"><b>✏️ Feladatok</b></a>` +
+  KONYV.fejezetek.map((f) => `<h4>${f.cim}</h4>` + f.leckek.map((l) => `<a href="#lecke-${l.id}">${l.cim}</a>`).join("")).join("");
+
+/* ---- feladatok ---- */
+const FELADATOK = KONYV.fejezetek.filter((f) => f.feladat).map((f) => ({
+  id: f.id, cim: f.cim, konyv: KONYV.cim,
+  key: `demo/okostankonyv.html#feladat-${f.id}`,
+  d: f.feladat,
+}));
+const panel = (typeof MOTFeladat !== "undefined") ? MOTFeladat.panel($("#feladatok"), FELADATOK) : null;
+
+/* ---- leckék kirajzolása ---- */
+let animok = [];
+function leckekKirajzol(szuro) {
+  animok.forEach((a) => a.torol && a.torol()); animok = [];
+  const cel = $("#leckek"); cel.innerHTML = "";
+  KONYV.fejezetek.forEach((fej) => {
+    fej.leckek.forEach((l, i) => {
+      const szoveg = (l.cim + " " + l.html.replace(/<[^>]+>/g, " ")).toLowerCase();
+      if (szuro && !szoveg.includes(szuro)) return;
+      const d = document.createElement("section"); d.className = "kartya lecke"; d.id = "lecke-" + l.id;
+      let html = `<h2>${l.cim}</h2>` + l.html;
+      if (szuro) html = html.replace(new RegExp("(" + szuro.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")(?![^<]*>)", "gi"), "<mark>$1</mark>");
+      d.innerHTML = html; cel.appendChild(d);
+      if (szuro) return;
+      let utolso = d;
+      if (typeof animBeszur === "function") (l.anim || []).forEach((k) => { const h = animBeszur(k, utolso, "utan"); animok.push(h); utolso = h.elem; });
+      if (i === fej.leckek.length - 1 && fej.feladat && panel) {
+        const g = MOTFeladat.vegeGomb(FELADATOK.find((x) => x.id === fej.id), panel); utolso.insertAdjacentElement("afterend", g);
+      }
+    });
+  });
+  if (!cel.children.length) cel.innerHTML = `<div class="kartya">Nincs találat.</div>`;
+}
+leckekKirajzol("");
+$("#kereso").addEventListener("input", (e) => leckekKirajzol(e.target.value.trim().toLowerCase()));
+
+/* ---- saját jegyzet ---- */
+const JEGYZET_KULCS = "mot_jegyzet_" + KONYV.azonosito;
+try { $("#jegyzet").value = localStorage.getItem(JEGYZET_KULCS) || ""; } catch (e) {}
+$("#jegyzet").addEventListener("input", (e) => { try { localStorage.setItem(JEGYZET_KULCS, e.target.value); } catch (x) {} });
+$("#jegyzet-mentes").onclick = () => {
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([$("#jegyzet").value], { type: "text/plain;charset=utf-8" }));
+  a.download = KONYV.azonosito + "-jegyzet.txt"; a.click(); URL.revokeObjectURL(a.href);
+};
+</script>
+
+<script>document.write('<script src="../assets/js/hatter.js" data-tema="' + (KONYV.tema || "") + '"><\/script>');</script>
+</body>
+</html>

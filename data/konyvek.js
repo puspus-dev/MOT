@@ -29,49 +29,49 @@ const MOT_KONYVEK = [
         "elso_oldal": 9
       },
       {
-        "cim": "A kommunikacio vilaga",
+        "cim": "A kommunikáció világa",
         "pdf": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/02_A_kommunikacio_vilaga/02_A_kommunikacio_vilaga.pdf",
         "feladat": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/okostankonyv.html#feladat-02_A_kommunikacio_vilaga",
         "oldalak": "PDF 16–39. oldal",
         "elso_oldal": 16
       },
       {
-        "cim": "Szofajok I az ige",
+        "cim": "Szófajok I. az ige",
         "pdf": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/03_Szofajok_I_az_ige/03_Szofajok_I_az_ige.pdf",
         "feladat": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/okostankonyv.html#feladat-03_Szofajok_I_az_ige",
         "oldalak": "PDF 40–57. oldal",
         "elso_oldal": 40
       },
       {
-        "cim": "Szofajok II nevszok hatarozoszo",
+        "cim": "Szófajok II. névszók határozószó",
         "pdf": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/04_Szofajok_II_nevszok_hatarozoszo/04_Szofajok_II_nevszok_hatarozoszo.pdf",
         "feladat": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/okostankonyv.html#feladat-04_Szofajok_II_nevszok_hatarozoszo",
         "oldalak": "PDF 58–99. oldal",
         "elso_oldal": 58
       },
       {
-        "cim": "Szofajok III nevmasok igenevek",
+        "cim": "Szófajok III. névmások igenevek",
         "pdf": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/05_Szofajok_III_nevmasok_igenevek/05_Szofajok_III_nevmasok_igenevek.pdf",
         "feladat": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/okostankonyv.html#feladat-05_Szofajok_III_nevmasok_igenevek",
         "oldalak": "PDF 100–123. oldal",
         "elso_oldal": 100
       },
       {
-        "cim": "Szofajok IV viszonyszok mondatszok",
+        "cim": "Szófajok IV. viszonyszók mondatszók",
         "pdf": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/06_Szofajok_IV_viszonyszok_mondatszok/06_Szofajok_IV_viszonyszok_mondatszok.pdf",
         "feladat": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/okostankonyv.html#feladat-06_Szofajok_IV_viszonyszok_mondatszok",
         "oldalak": "PDF 124–139. oldal",
         "elso_oldal": 124
       },
       {
-        "cim": "Szofajok V szofaji rendszer",
+        "cim": "Szófajok V. szófaji rendszer",
         "pdf": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/07_Szofajok_V_szofaji_rendszer/07_Szofajok_V_szofaji_rendszer.pdf",
         "feladat": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/okostankonyv.html#feladat-07_Szofajok_V_szofaji_rendszer",
         "oldalak": "PDF 140–147. oldal",
         "elso_oldal": 140
       },
       {
-        "cim": "Fogalomtar",
+        "cim": "Fogalomtár",
         "pdf": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/08_Fogalomtar/08_Fogalomtar.pdf",
         "feladat": "6.osztaly/01_Magyar_nyelv_OH-MNY06TB/okostankonyv.html#feladat-08_Fogalomtar",
         "oldalak": "PDF 148–153. oldal",
@@ -89,7 +89,7 @@ const MOT_KONYVEK = [
     "okostankonyv": "6.osztaly/02_Irodalom_OH-MIR06TB/okostankonyv.html",
     "fejezetek": [
       {
-        "cim": "Hosok",
+        "cim": "Hősök",
         "pdf": "6.osztaly/02_Irodalom_OH-MIR06TB/01_Hosok/01_Hosok.pdf",
         "feladat": "6.osztaly/02_Irodalom_OH-MIR06TB/okostankonyv.html#feladat-01_Hosok",
         "oldalak": "PDF 2–79. oldal",
@@ -117,7 +117,7 @@ const MOT_KONYVEK = [
         "elso_oldal": 198
       },
       {
-        "cim": "Regenyek",
+        "cim": "Regények",
         "pdf": "6.osztaly/02_Irodalom_OH-MIR06TB/05_Regenyek/05_Regenyek.pdf",
         "feladat": "6.osztaly/02_Irodalom_OH-MIR06TB/okostankonyv.html#feladat-05_Regenyek",
         "oldalak": "PDF 228–257. oldal",
@@ -135,35 +135,35 @@ const MOT_KONYVEK = [
     "okostankonyv": "6.osztaly/03_Matematika_tankonyv_OH-MAT06TA/okostankonyv.html",
     "fejezetek": [
       {
-        "cim": "Egesz szamok oszthatosag",
+        "cim": "Egész számok oszthatóság",
         "pdf": "6.osztaly/03_Matematika_tankonyv_OH-MAT06TA/01_Egesz_szamok_oszthatosag/01_Egesz_szamok_oszthatosag.pdf",
         "feladat": "6.osztaly/03_Matematika_tankonyv_OH-MAT06TA/okostankonyv.html#feladat-01_Egesz_szamok_oszthatosag",
         "oldalak": "PDF 9–54. oldal",
         "elso_oldal": 9
       },
       {
-        "cim": "Tortek",
+        "cim": "Törtek",
         "pdf": "6.osztaly/03_Matematika_tankonyv_OH-MAT06TA/02_Tortek/02_Tortek.pdf",
         "feladat": "6.osztaly/03_Matematika_tankonyv_OH-MAT06TA/okostankonyv.html#feladat-02_Tortek",
         "oldalak": "PDF 55–84. oldal",
         "elso_oldal": 55
       },
       {
-        "cim": "Geometria tengelyes tukrozes",
+        "cim": "Geometria tengelyes tükrözés",
         "pdf": "6.osztaly/03_Matematika_tankonyv_OH-MAT06TA/03_Geometria_tengelyes_tukrozes/03_Geometria_tengelyes_tukrozes.pdf",
         "feladat": "6.osztaly/03_Matematika_tankonyv_OH-MAT06TA/okostankonyv.html#feladat-03_Geometria_tengelyes_tukrozes",
         "oldalak": "PDF 85–122. oldal",
         "elso_oldal": 85
       },
       {
-        "cim": "Arany szazalek szoveges",
+        "cim": "Arany százalék szöveges",
         "pdf": "6.osztaly/03_Matematika_tankonyv_OH-MAT06TA/04_Arany_szazalek_szoveges/04_Arany_szazalek_szoveges.pdf",
         "feladat": "6.osztaly/03_Matematika_tankonyv_OH-MAT06TA/okostankonyv.html#feladat-04_Arany_szazalek_szoveges",
         "oldalak": "PDF 123–172. oldal",
         "elso_oldal": 123
       },
       {
-        "cim": "Kerulet terulet felszin terfogat",
+        "cim": "Kerület, terület, felszín, térfogat",
         "pdf": "6.osztaly/03_Matematika_tankonyv_OH-MAT06TA/05_Kerulet_terulet_felszin_terfogat/05_Kerulet_terulet_felszin_terfogat.pdf",
         "feladat": "6.osztaly/03_Matematika_tankonyv_OH-MAT06TA/okostankonyv.html#feladat-05_Kerulet_terulet_felszin_terfogat",
         "oldalak": "PDF 173–202. oldal",
@@ -188,35 +188,35 @@ const MOT_KONYVEK = [
     "okostankonyv": "6.osztaly/04_Matematika_munkafuzet_OH-MAT06MA/okostankonyv.html",
     "fejezetek": [
       {
-        "cim": "Egesz szamok oszthatosag",
+        "cim": "Egész számok oszthatóság",
         "pdf": "6.osztaly/04_Matematika_munkafuzet_OH-MAT06MA/01_Egesz_szamok_oszthatosag/01_Egesz_szamok_oszthatosag.pdf",
         "feladat": "6.osztaly/04_Matematika_munkafuzet_OH-MAT06MA/okostankonyv.html#feladat-01_Egesz_szamok_oszthatosag",
         "oldalak": "PDF 9–35. oldal",
         "elso_oldal": 9
       },
       {
-        "cim": "Tortek",
+        "cim": "Törtek",
         "pdf": "6.osztaly/04_Matematika_munkafuzet_OH-MAT06MA/02_Tortek/02_Tortek.pdf",
         "feladat": "6.osztaly/04_Matematika_munkafuzet_OH-MAT06MA/okostankonyv.html#feladat-02_Tortek",
         "oldalak": "PDF 36–54. oldal",
         "elso_oldal": 36
       },
       {
-        "cim": "Geometria tengelyes tukrozes",
+        "cim": "Geometria tengelyes tükrözés",
         "pdf": "6.osztaly/04_Matematika_munkafuzet_OH-MAT06MA/03_Geometria_tengelyes_tukrozes/03_Geometria_tengelyes_tukrozes.pdf",
         "feladat": "6.osztaly/04_Matematika_munkafuzet_OH-MAT06MA/okostankonyv.html#feladat-03_Geometria_tengelyes_tukrozes",
         "oldalak": "PDF 55–79. oldal",
         "elso_oldal": 55
       },
       {
-        "cim": "Arany szazalek szoveges",
+        "cim": "Arany százalék szöveges",
         "pdf": "6.osztaly/04_Matematika_munkafuzet_OH-MAT06MA/04_Arany_szazalek_szoveges/04_Arany_szazalek_szoveges.pdf",
         "feladat": "6.osztaly/04_Matematika_munkafuzet_OH-MAT06MA/okostankonyv.html#feladat-04_Arany_szazalek_szoveges",
         "oldalak": "PDF 80–106. oldal",
         "elso_oldal": 80
       },
       {
-        "cim": "Kerulet terulet felszin terfogat",
+        "cim": "Kerület, terület, felszín, térfogat",
         "pdf": "6.osztaly/04_Matematika_munkafuzet_OH-MAT06MA/05_Kerulet_terulet_felszin_terfogat/05_Kerulet_terulet_felszin_terfogat.pdf",
         "feladat": "6.osztaly/04_Matematika_munkafuzet_OH-MAT06MA/okostankonyv.html#feladat-05_Kerulet_terulet_felszin_terfogat",
         "oldalak": "PDF 107–125. oldal",
@@ -230,7 +230,7 @@ const MOT_KONYVEK = [
         "elso_oldal": 126
       },
       {
-        "cim": "Mindennapi penzugyeink",
+        "cim": "Mindennapi pénzügyeink",
         "pdf": "6.osztaly/04_Matematika_munkafuzet_OH-MAT06MA/07_Mindennapi_penzugyeink/07_Mindennapi_penzugyeink.pdf",
         "feladat": "6.osztaly/04_Matematika_munkafuzet_OH-MAT06MA/okostankonyv.html#feladat-07_Mindennapi_penzugyeink",
         "oldalak": "PDF 138–145. oldal",
@@ -263,28 +263,28 @@ const MOT_KONYVEK = [
     "okostankonyv": "6.osztaly/06_Tortenelem_OH-TOR06TB/okostankonyv.html",
     "fejezetek": [
       {
-        "cim": "Magyar kiralyportrek",
+        "cim": "Magyar királyportrék",
         "pdf": "6.osztaly/06_Tortenelem_OH-TOR06TB/01_Magyar_kiralyportrek/01_Magyar_kiralyportrek.pdf",
         "feladat": "6.osztaly/06_Tortenelem_OH-TOR06TB/okostankonyv.html#feladat-01_Magyar_kiralyportrek",
         "oldalak": "PDF 9–16. oldal",
         "elso_oldal": 9
       },
       {
-        "cim": "Hunyadi Janos",
+        "cim": "Hunyadi János",
         "pdf": "6.osztaly/06_Tortenelem_OH-TOR06TB/02_Hunyadi_Janos/02_Hunyadi_Janos.pdf",
         "feladat": "6.osztaly/06_Tortenelem_OH-TOR06TB/okostankonyv.html#feladat-02_Hunyadi_Janos",
         "oldalak": "PDF 17–20. oldal",
         "elso_oldal": 17
       },
       {
-        "cim": "Hunyadi Matyas",
+        "cim": "Hunyadi Mátyás",
         "pdf": "6.osztaly/06_Tortenelem_OH-TOR06TB/03_Hunyadi_Matyas/03_Hunyadi_Matyas.pdf",
         "feladat": "6.osztaly/06_Tortenelem_OH-TOR06TB/okostankonyv.html#feladat-03_Hunyadi_Matyas",
         "oldalak": "PDF 21–30. oldal",
         "elso_oldal": 21
       },
       {
-        "cim": "Foldrajzi felfedezesek",
+        "cim": "Földrajzi felfedezések",
         "pdf": "6.osztaly/06_Tortenelem_OH-TOR06TB/04_Foldrajzi_felfedezesek/04_Foldrajzi_felfedezesek.pdf",
         "feladat": "6.osztaly/06_Tortenelem_OH-TOR06TB/okostankonyv.html#feladat-04_Foldrajzi_felfedezesek",
         "oldalak": "PDF 31–35. oldal",
@@ -298,56 +298,56 @@ const MOT_KONYVEK = [
         "elso_oldal": 36
       },
       {
-        "cim": "Vallasi megujulas",
+        "cim": "Vallási megújulás",
         "pdf": "6.osztaly/06_Tortenelem_OH-TOR06TB/06_Vallasi_megujulas/06_Vallasi_megujulas.pdf",
         "feladat": "6.osztaly/06_Tortenelem_OH-TOR06TB/okostankonyv.html#feladat-06_Vallasi_megujulas",
         "oldalak": "PDF 39–47. oldal",
         "elso_oldal": 39
       },
       {
-        "cim": "Uj vilagkep",
+        "cim": "Új világkép",
         "pdf": "6.osztaly/06_Tortenelem_OH-TOR06TB/07_Uj_vilagkep/07_Uj_vilagkep.pdf",
         "feladat": "6.osztaly/06_Tortenelem_OH-TOR06TB/okostankonyv.html#feladat-07_Uj_vilagkep",
         "oldalak": "PDF 48–56. oldal",
         "elso_oldal": 48
       },
       {
-        "cim": "A torok haboruk hosei",
+        "cim": "A török háborúk hősei",
         "pdf": "6.osztaly/06_Tortenelem_OH-TOR06TB/08_A_torok_haboruk_hosei/08_A_torok_haboruk_hosei.pdf",
         "feladat": "6.osztaly/06_Tortenelem_OH-TOR06TB/okostankonyv.html#feladat-08_A_torok_haboruk_hosei",
         "oldalak": "PDF 57–64. oldal",
         "elso_oldal": 57
       },
       {
-        "cim": "Bocskai Bethlen Zrinyi",
+        "cim": "Bocskai Bethlen Zrínyi",
         "pdf": "6.osztaly/06_Tortenelem_OH-TOR06TB/09_Bocskai_Bethlen_Zrinyi/09_Bocskai_Bethlen_Zrinyi.pdf",
         "feladat": "6.osztaly/06_Tortenelem_OH-TOR06TB/okostankonyv.html#feladat-09_Bocskai_Bethlen_Zrinyi",
         "oldalak": "PDF 65–73. oldal",
         "elso_oldal": 65
       },
       {
-        "cim": "II Rakoczi Ferenc",
+        "cim": "II. Rákóczi Ferenc",
         "pdf": "6.osztaly/06_Tortenelem_OH-TOR06TB/10_II_Rakoczi_Ferenc/10_II_Rakoczi_Ferenc.pdf",
         "feladat": "6.osztaly/06_Tortenelem_OH-TOR06TB/okostankonyv.html#feladat-10_II_Rakoczi_Ferenc",
         "oldalak": "PDF 74–80. oldal",
         "elso_oldal": 74
       },
       {
-        "cim": "Maria Terezia",
+        "cim": "Mária Terézia",
         "pdf": "6.osztaly/06_Tortenelem_OH-TOR06TB/11_Maria_Terezia/11_Maria_Terezia.pdf",
         "feladat": "6.osztaly/06_Tortenelem_OH-TOR06TB/okostankonyv.html#feladat-11_Maria_Terezia",
         "oldalak": "PDF 81–88. oldal",
         "elso_oldal": 81
       },
       {
-        "cim": "Elet a torok hodoltsag koraban",
+        "cim": "Élet a török hódoltság korában",
         "pdf": "6.osztaly/06_Tortenelem_OH-TOR06TB/12_Elet_a_torok_hodoltsag_koraban/12_Elet_a_torok_hodoltsag_koraban.pdf",
         "feladat": "6.osztaly/06_Tortenelem_OH-TOR06TB/okostankonyv.html#feladat-12_Elet_a_torok_hodoltsag_koraban",
         "oldalak": "PDF 89–95. oldal",
         "elso_oldal": 89
       },
       {
-        "cim": "Elet a XVIII szazadban",
+        "cim": "Élet a XVIII században",
         "pdf": "6.osztaly/06_Tortenelem_OH-TOR06TB/13_Elet_a_XVIII_szazadban/13_Elet_a_XVIII_szazadban.pdf",
         "feladat": "6.osztaly/06_Tortenelem_OH-TOR06TB/okostankonyv.html#feladat-13_Elet_a_XVIII_szazadban",
         "oldalak": "PDF 96–100. oldal",
@@ -361,7 +361,7 @@ const MOT_KONYVEK = [
         "elso_oldal": 101
       },
       {
-        "cim": "Tarsadalmi politikai forradalom",
+        "cim": "Társadalmi, politikai forradalom",
         "pdf": "6.osztaly/06_Tortenelem_OH-TOR06TB/15_Tarsadalmi_politikai_forradalom/15_Tarsadalmi_politikai_forradalom.pdf",
         "feladat": "6.osztaly/06_Tortenelem_OH-TOR06TB/okostankonyv.html#feladat-15_Tarsadalmi_politikai_forradalom",
         "oldalak": "PDF 110–118. oldal",
@@ -382,21 +382,21 @@ const MOT_KONYVEK = [
         "elso_oldal": 133
       },
       {
-        "cim": "A szabadsagharc",
+        "cim": "A szabadságharc",
         "pdf": "6.osztaly/06_Tortenelem_OH-TOR06TB/18_A_szabadsagharc/18_A_szabadsagharc.pdf",
         "feladat": "6.osztaly/06_Tortenelem_OH-TOR06TB/okostankonyv.html#feladat-18_A_szabadsagharc",
         "oldalak": "PDF 142–153. oldal",
         "elso_oldal": 142
       },
       {
-        "cim": "A kiegyezes",
+        "cim": "A kiegyezés",
         "pdf": "6.osztaly/06_Tortenelem_OH-TOR06TB/19_A_kiegyezes/19_A_kiegyezes.pdf",
         "feladat": "6.osztaly/06_Tortenelem_OH-TOR06TB/okostankonyv.html#feladat-19_A_kiegyezes",
         "oldalak": "PDF 154–161. oldal",
         "elso_oldal": 154
       },
       {
-        "cim": "Kislexikon es forrasok",
+        "cim": "Kislexikon és források",
         "pdf": "6.osztaly/06_Tortenelem_OH-TOR06TB/20_Kislexikon_es_forrasok/20_Kislexikon_es_forrasok.pdf",
         "feladat": "6.osztaly/06_Tortenelem_OH-TOR06TB/okostankonyv.html#feladat-20_Kislexikon_es_forrasok",
         "oldalak": "PDF 162–169. oldal",
@@ -414,14 +414,14 @@ const MOT_KONYVEK = [
     "okostankonyv": "6.osztaly/07_Enek_OH-ENZ06TA/okostankonyv.html",
     "fejezetek": [
       {
-        "cim": "A nepzene vilaga",
+        "cim": "A népzene világa",
         "pdf": "6.osztaly/07_Enek_OH-ENZ06TA/01_A_nepzene_vilaga/01_A_nepzene_vilaga.pdf",
         "feladat": "6.osztaly/07_Enek_OH-ENZ06TA/okostankonyv.html#feladat-01_A_nepzene_vilaga",
         "oldalak": "PDF 6–59. oldal",
         "elso_oldal": 6
       },
       {
-        "cim": "Barangolas a zenetortenetben",
+        "cim": "Barangolás a zenetörténetben",
         "pdf": "6.osztaly/07_Enek_OH-ENZ06TA/02_Barangolas_a_zenetortenetben/02_Barangolas_a_zenetortenetben.pdf",
         "feladat": "6.osztaly/07_Enek_OH-ENZ06TA/okostankonyv.html#feladat-02_Barangolas_a_zenetortenetben",
         "oldalak": "PDF 60–93. oldal",

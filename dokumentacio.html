@@ -13,13 +13,15 @@
 <pre><code>index.html            Kezdőlap: tankönyvválasztó (szűrők + kártyák)
 konyv.html            Tankönyv nézet: tartalomjegyzék
 diagram.html          Fogalomtérképek (mxGraph)
+animaciok.html        3D animációk (three.js)
 elozmenyek.html       Megoldott feladatsorok
 segitseg.html, impresszum.html, dokumentacio.html
 data/konyvek.js       Tankönyvek és fejezetek (MOT_KONYVEK)
 data/diagramok.js     Fogalomtérképek (MOT_DIAGRAMOK)
 assets/css/style.css  Közös stíluslap (színek az 1. blokkban)
-assets/js/            kozos.js, fooldal.js, konyv.js, diagram.js, elozmenyek.js
+assets/js/            kozos.js, fooldal.js, konyv.js, diagram.js, elozmenyek.js, 3d.js, animaciok.js
 assets/vendor/mxgraph Harmadik féltől: mxGraph (Apache 2.0)
+assets/vendor/three   Harmadik féltől: three.js r147 (MIT)
 6.osztaly/&lt;tankonyv&gt;/ PDF-ek, okostankonyv.html, fejezetenként feladatok.html
 </code></pre>
 <h2>2. URL-paraméterek</h2>
@@ -42,6 +44,10 @@ assets/vendor/mxgraph Harmadik féltől: mxGraph (Apache 2.0)
 <tr>
 <td><code>diagram.html?id=&lt;diagram-id&gt;</code></td>
 <td>Egy fogalomtérkép megjelenítése.</td>
+</tr>
+<tr>
+<td><code>animaciok.html#&lt;név&gt;</code></td>
+<td>A 3D animációk oldala a megadott kártyához görget: <code>naprendszer</code>, <code>evszakok</code>, <code>foldbelseje</code>, <code>toltesek</code>.</td>
 </tr>
 <tr>
 <td><code>6.osztaly/&lt;könyv&gt;/okostankonyv.html#oldal-&lt;N&gt;</code></td>
@@ -98,6 +104,18 @@ assets/vendor/mxgraph Harmadik féltől: mxGraph (Apache 2.0)
 <td>A teljes HTML-tankönyv útvonala.</td>
 </tr>
 <tr>
+<td><code>csoportok</code></td>
+<td>objektum</td>
+<td>nem</td>
+<td>Témakör neve → <code>{ "feladat": "…" }</code>: témakörönkénti feladatsor (pl. Természettudomány).</td>
+</tr>
+<tr>
+<td><code>animaciok</code></td>
+<td>boolean</td>
+<td>nem</td>
+<td><code>true</code>: a tankönyv oldalán megjelenik a „3D animációk" gomb.</td>
+</tr>
+<tr>
 <td><code>fejezetek</code></td>
 <td>tömb</td>
 <td>igen</td>
@@ -127,8 +145,13 @@ assets/vendor/mxgraph Harmadik féltől: mxGraph (Apache 2.0)
 </tr>
 <tr>
 <td><code>feladat</code></td>
+<td>string | null</td>
+<td>A <code>feladatok.html</code> útvonala (az <strong>eredménytár kulcsa</strong>, lásd 5.). <code>null</code>, ha a feladat csak témakörönként van.</td>
+</tr>
+<tr>
+<td><code>csoport</code></td>
 <td>string</td>
-<td>A <code>feladatok.html</code> útvonala. Ez az <strong>eredménytár kulcsa</strong> is (lásd 5.).</td>
+<td>A lecke témaköre. Ha meg van adva, a tartalomjegyzék témakör-fejlécekkel csoportosít; a fejléc a <code>csoportok</code> megfelelő feladatsorára mutat.</td>
 </tr>
 <tr>
 <td><code>oldalak</code></td>
@@ -228,6 +251,45 @@ assets/vendor/mxgraph Harmadik féltől: mxGraph (Apache 2.0)
 </tbody>
 </table>
 <p>Az XML-t kézzel vagy a <a href="https://www.drawio.com/">draw.io</a> szerkesztővel is elő lehet állítani (<em>Extras → Edit Diagram</em>). A megjelenítő (<code>diagram.js</code>) <strong>csak olvasható</strong>: a csomópontok nem mozgathatók, az ábra húzással görgethető. Az mxGraph 4.2.2-es verziója van beépítve; a projekt fejlesztése megszűnt, az utódja a <a href="https://github.com/maxGraph/maxGraph">maxGraph</a>.</p>
+<h2>7/b. 3D animációk (<code>assets/js/3d.js</code>, three.js)</h2>
+<p>A 3D jelenetek a <a href="https://threejs.org/">three.js</a> r147-es verzióját használják, amely helyben, az <code>assets/vendor/three/</code> mappában van (nem külső szerverről töltődik). A főoldal kék sávjában a forgó Föld is ez; az <code>animaciok.html</code> négy interaktív jelenetet tartalmaz.</p>
+<table>
+<thead>
+<tr>
+<th>Függvény</th>
+<th>Jelenet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hero3d(tarolo)</code></td>
+<td>Főoldali háttér: forgó Föld keringő Holddal (nem interaktív).</td>
+</tr>
+<tr>
+<td><code>naprendszer(tarolo)</code></td>
+<td>Nap–Föld–Hold, sebességcsúszka, tengely és pálya ki/be.</td>
+</tr>
+<tr>
+<td><code>evszakok(tarolo)</code></td>
+<td>A Föld keringése döntött tengellyel; gombok az évszakokra, csúszka a pályán, magyarázat.</td>
+</tr>
+<tr>
+<td><code>foldBelseje(tarolo)</code></td>
+<td>Kivágott gömb a Föld rétegeivel; réteg kiemelése gombbal.</td>
+</tr>
+<tr>
+<td><code>toltesek(tarolo)</code></td>
+<td>Elektromos vonzás és taszítás nyilakkal.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Közös színpad:</strong> <code>szinpad(tarolo, opciok)</code> hozza létre a renderert és a kamerát. Húzással forgatható, görgetéssel nagyítható; a ciklus csak akkor fut, amikor a tároló látszik. Visszaad egy objektumot, amelyen <code>ciklus(fn)</code>-nel adhatsz hozzá képkockánkénti frissítést (<code>fn(dt, ido)</code>).</li>
+<li><strong>Beállítások:</strong> <code>opciok.tavol</code> (kamera távolsága), <code>pitch</code>/<code>yaw</code> (kezdő nézet), <code>interaktiv</code> (false: nem forgatható), <code>csillagok</code> (csillagos háttér).</li>
+<li><strong>Új jelenet:</strong> írj egy <code>function sajatJelenet(tarolo)</code> függvényt a <code>3d.js</code>-ben (másolj egy meglévőt), tegyél az <code>animaciok.html</code>-be egy <code>&lt;div class="anim" id="…-vaszon"&gt;</code> elemet, és hívd meg az <code>animaciok.js</code>-ben.</li>
+<li><strong>Textúrák:</strong> a Föld és a Hold felszíne programból készül (<code>foldTextura()</code>, <code>holdTextura()</code>), nincs külső képfájl.</li>
+<li><strong>Hozzáférhetőség:</strong> ha a böngészőben be van kapcsolva a „mozgás csökkentése", a jelenetek csak egy állóképet rajzolnak. WebGL nélküli böngészőben tájékoztató szöveg jelenik meg.</li>
+</ul>
 <h2>8. Új tartalom hozzáadása</h2>
 <ol>
 <li><strong>Új fejezet:</strong> tedd a PDF-et és a <code>feladatok.html</code>-t a tankönyv mappájába, majd vegyél fel egy blokkot a <code>fejezetek</code> listába (<code>data/konyvek.js</code>).</li>
@@ -239,6 +301,7 @@ assets/vendor/mxgraph Harmadik féltől: mxGraph (Apache 2.0)
 <h2>9. Licencek</h2>
 <ul>
 <li><strong>mxGraph</strong> – Apache License 2.0 (<code>assets/vendor/mxgraph/LICENSE</code>).</li>
+<li><strong>three.js</strong> – MIT licenc (<code>assets/vendor/three/LICENSE</code>).</li>
 <li><strong>Tankönyvek</strong> – az Oktatási Hivatal kiadványai; a felhasználásra vonatkozó jogosultságot az üzemeltető vállalja.</li>
 <li><strong>Feladatok, kód</strong> – saját készítésű.</li>
 </ul>

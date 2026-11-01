@@ -1,9 +1,12 @@
-/* MOT – Kezdőlap: tankönyvválasztó (tantárgy + évfolyam szűrő) */
+/* MOT – Kezdőlap: tankönyvválasztó (tantárgy + évfolyam szűrő) és a 3D háttér */
 oldalKeret("index.html");
 
 const szuroTantargy = $("#szuro-tantargy");
 const szuroEvfolyam = $("#szuro-evfolyam");
 const szuroSzoveg   = $("#szuro-szoveg");
+
+/** Egy könyv feladatsorainak száma: leckénkénti + témakörönkénti. */
+const feladatDb = (k) => k.fejezetek.filter((f) => f.feladat).length + Object.keys(k.csoportok || {}).length;
 
 /** Egy legördülő menü feltöltése az adatokban előforduló értékekkel. */
 function opcioTolt(elem, ertekek, mind) {
@@ -20,7 +23,7 @@ function kartya(k) {
       <div class="konyv__ikon">${k.ikon}</div>
       <h3>${k.cim}</h3>
       <p>${k.tantargy} · ${k.evfolyam}</p>
-      <p>${k.fejezetek.length} fejezet / feladatsor${k.okostankonyv ? " · 📖 okostankönyv" : ""}</p>
+      <p>${k.fejezetek.length} lecke / fejezet · ${feladatDb(k)} feladatsor${k.okostankonyv ? " · 📖 okostankönyv" : ""}</p>
       <div class="konyv__gomb">Megnyitás →</div>
     </a>`;
 }
@@ -38,7 +41,9 @@ function kirajzol() {
 [szuroTantargy, szuroEvfolyam].forEach((e) => e.addEventListener("change", kirajzol));
 szuroSzoveg.addEventListener("input", kirajzol);
 
-const osszFejezet = MOT_KONYVEK.reduce((a, k) => a + k.fejezetek.length, 0);
 $("#szamlalok").innerHTML =
-  `<span>📚 ${MOT_KONYVEK.length} tankönyv</span><span>✏️ ${osszFejezet} feladatsor</span>`;
+  `<span>📚 ${MOT_KONYVEK.length} tankönyv</span><span>✏️ ${MOT_KONYVEK.reduce((a, k) => a + feladatDb(k), 0)} feladatsor</span><span>🌍 4 3D animáció</span>`;
 kirajzol();
+
+/* 3D háttér a kék sávban (ha a three.js betöltődött) */
+if (typeof THREE !== "undefined") hero3d($("#hero3d"));

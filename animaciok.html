@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>3D animációk – MOT</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <header id="fejlec"></header>
+  <section class="bevezeto"><div class="sav"><div class="morzsa"><a href="index.html">Kezdőlap</a> › 3D animációk</div>
+    <h1>3D animációk</h1><p>Forgasd, nagyítsd, próbáld ki! Húzással forgathatod a nézetet, a görgővel (vagy két ujjal) nagyíthatod.</p></div></section>
+  <main class="sav tartalom">
+
+    <div class="panel animkartya" id="naprendszer">
+      <h3>☀️ Nap, Föld és Hold</h3>
+      <p>A Föld a tengelye körül forog (ettől váltakozik a nappal és az éjszaka), és közben kering a Nap körül. A Hold a Földet kerüli meg. <i>Az arányok szemléltetők, nem méretarányosak.</i></p>
+      <div class="anim" id="naprendszer-vaszon"></div>
+      <div class="vezerlo">
+        <button class="gomb" id="nap-jatek">⏸ Megállít</button>
+        <label>Sebesség <input type="range" id="nap-sebesseg" min="0.2" max="4" step="0.1" value="1"></label>
+        <label><input type="checkbox" id="nap-tengely" checked> Forgástengely</label>
+        <label><input type="checkbox" id="nap-palya" checked> Hold pályája</label>
+      </div>
+      <div class="animinfo">Figyeld meg, hogy a Föld mindig félig meg van világítva: ahol a Nap felé néz, ott nappal van, a másik oldalon éjszaka.</div>
+    </div>
+
+    <div class="panel animkartya" id="evszakok">
+      <h3>🌦️ Az évszakok kialakulása</h3>
+      <p>A Föld forgástengelye ferde, és a keringés során mindig ugyanarra dől. Ezért kap a két félgömb az év különböző szakaszaiban más-más szögben napsugarakat.</p>
+      <div class="anim" id="evszakok-vaszon"></div>
+      <div class="vezerlo">
+        <button class="gomb gomb--tomor" data-theta="90">Tavasz (márc. 21.)</button>
+        <button class="gomb gomb--tomor" data-theta="180">Nyár (jún. 21.)</button>
+        <button class="gomb gomb--tomor" data-theta="270">Ősz (szept. 23.)</button>
+        <button class="gomb gomb--tomor" data-theta="0">Tél (dec. 22.)</button>
+        <button class="gomb" id="ev-jatek">▶ Automatikus keringés</button>
+        <label>Pálya <input type="range" id="ev-csuszka" min="0" max="360" value="180"></label>
+      </div>
+      <div class="animinfo" id="ev-info"></div>
+    </div>
+
+    <div class="panel animkartya" id="foldbelseje">
+      <h3>🌋 A Föld belső szerkezete</h3>
+      <p>A kivágott gömbön látszanak a Föld rétegei. Válassz egy réteget, és olvasd el a leírását! <i>A rétegek vastagsága szemléltető, nem méretarányos.</i></p>
+      <div class="anim" id="foldbelseje-vaszon"></div>
+      <div class="vezerlo">
+        <button class="gomb gomb--tomor" data-reteg="kereg">Földkéreg</button>
+        <button class="gomb gomb--tomor" data-reteg="kopeny">Földköpeny</button>
+        <button class="gomb gomb--tomor" data-reteg="kulsomag">Külső mag</button>
+        <button class="gomb gomb--tomor" data-reteg="belsomag">Belső mag</button>
+        <button class="gomb" id="fb-forgat">⏸ Forgatás leállítása</button>
+      </div>
+      <div class="animinfo" id="fb-info">Válassz egy réteget a gombokkal!</div>
+    </div>
+
+    <div class="panel animkartya" id="toltesek">
+      <h3>⚡ Elektromos kölcsönhatás: vonzás és taszítás</h3>
+      <p>Az azonos töltésű testek taszítják, az ellentétes töltésűek vonzzák egymást. A sárga nyilak az erőhatás irányát mutatják, közelebb erősebbek.</p>
+      <div class="anim" id="toltesek-vaszon"></div>
+      <div class="vezerlo">
+        <button class="gomb gomb--tomor" data-tolt="vonzas">+ és − (ellentétes)</button>
+        <button class="gomb gomb--tomor" data-tolt="taszitas">+ és + (azonos)</button>
+      </div>
+      <div class="animinfo" id="tolt-info"></div>
+    </div>
+  </main>
+  <footer id="lablec"></footer>
+  <script src="assets/vendor/three/three.min.js"></script>
+  <script src="assets/js/3d.js"></script>
+  <script src="assets/js/kozos.js"></script>
+  <script src="assets/js/animaciok.js"></script>
+</body>
+</html>

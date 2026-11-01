@@ -8,13 +8,15 @@ A MOT egy **statikus weboldal**: nincs szerver és adatbázis, minden fájl a b�
 index.html            Kezdőlap: tankönyvválasztó (szűrők + kártyák)
 konyv.html            Tankönyv nézet: tartalomjegyzék
 diagram.html          Fogalomtérképek (mxGraph)
+animaciok.html        3D animációk (three.js)
 elozmenyek.html       Megoldott feladatsorok
 segitseg.html, impresszum.html, dokumentacio.html
 data/konyvek.js       Tankönyvek és fejezetek (MOT_KONYVEK)
 data/diagramok.js     Fogalomtérképek (MOT_DIAGRAMOK)
 assets/css/style.css  Közös stíluslap (színek az 1. blokkban)
-assets/js/            kozos.js, fooldal.js, konyv.js, diagram.js, elozmenyek.js
+assets/js/            kozos.js, fooldal.js, konyv.js, diagram.js, elozmenyek.js, 3d.js, animaciok.js
 assets/vendor/mxgraph Harmadik féltől: mxGraph (Apache 2.0)
+assets/vendor/three   Harmadik féltől: three.js r147 (MIT)
 6.osztaly/<tankonyv>/ PDF-ek, okostankonyv.html, fejezetenként feladatok.html
 ```
 
@@ -25,6 +27,7 @@ assets/vendor/mxgraph Harmadik féltől: mxGraph (Apache 2.0)
 | `konyv.html?id=<könyv-id>` | Egy tankönyv tartalomjegyzéke. Ismeretlen id esetén hibaüzenet. |
 | `diagram.html` | A fogalomtérképek listája. |
 | `diagram.html?id=<diagram-id>` | Egy fogalomtérkép megjelenítése. |
+| `animaciok.html#<név>` | A 3D animációk oldala a megadott kártyához görget: `naprendszer`, `evszakok`, `foldbelseje`, `toltesek`. |
 | `6.osztaly/<könyv>/okostankonyv.html#oldal-<N>` | Az okostankönyv N. oldalára ugrik (N = PDF-oldalszám). |
 
 ## 3. Tankönyvek: `data/konyvek.js`
@@ -39,6 +42,8 @@ A fájl egy `MOT_KONYVEK` nevű tömböt definiál. Egy elem:
 | `evfolyam` | string | igen | Az évfolyamszűrő értéke (pl. `6. osztály`). |
 | `ikon`, `szin` | string | igen | Emoji és hex színkód a kártyához. |
 | `okostankonyv` | string \| null | nem | A teljes HTML-tankönyv útvonala. |
+| `csoportok` | objektum | nem | Témakör neve → `{ "feladat": "…" }`: témakörönkénti feladatsor (pl. Természettudomány). |
+| `animaciok` | boolean | nem | `true`: a tankönyv oldalán megjelenik a „3D animációk" gomb. |
 | `fejezetek` | tömb | igen | Lásd lent. |
 
 Egy **fejezet**:
@@ -47,7 +52,8 @@ Egy **fejezet**:
 |---|---|---|
 | `cim` | string | A fejezet neve. |
 | `pdf` | string \| null | A fejezetre vágott PDF útvonala. |
-| `feladat` | string | A `feladatok.html` útvonala. Ez az **eredménytár kulcsa** is (lásd 5.). |
+| `feladat` | string \| null | A `feladatok.html` útvonala (az **eredménytár kulcsa**, lásd 5.). `null`, ha a feladat csak témakörönként van. |
+| `csoport` | string | A lecke témaköre. Ha meg van adva, a tartalomjegyzék témakör-fejlécekkel csoportosít; a fejléc a `csoportok` megfelelő feladatsorára mutat. |
 | `oldalak` | string | Megjelenített szöveg, pl. `PDF 9–15. oldal`. |
 | `elso_oldal` | number | A fejezet első PDF-oldala; ide ugrik az okostankönyv-gomb. |
 
@@ -106,6 +112,24 @@ A `MOT_DIAGRAMOK` tömb egy eleme:
 
 Az XML-t kézzel vagy a [draw.io](https://www.drawio.com/) szerkesztővel is elő lehet állítani (*Extras → Edit Diagram*). A megjelenítő (`diagram.js`) **csak olvasható**: a csomópontok nem mozgathatók, az ábra húzással görgethető. Az mxGraph 4.2.2-es verziója van beépítve; a projekt fejlesztése megszűnt, az utódja a [maxGraph](https://github.com/maxGraph/maxGraph).
 
+## 7/b. 3D animációk (`assets/js/3d.js`, three.js)
+
+A 3D jelenetek a [three.js](https://threejs.org/) r147-es verzióját használják, amely helyben, az `assets/vendor/three/` mappában van (nem külső szerverről töltődik). A főoldal kék sávjában a forgó Föld is ez; az `animaciok.html` négy interaktív jelenetet tartalmaz.
+
+| Függvény | Jelenet |
+|---|---|
+| `hero3d(tarolo)` | Főoldali háttér: forgó Föld keringő Holddal (nem interaktív). |
+| `naprendszer(tarolo)` | Nap–Föld–Hold, sebességcsúszka, tengely és pálya ki/be. |
+| `evszakok(tarolo)` | A Föld keringése döntött tengellyel; gombok az évszakokra, csúszka a pályán, magyarázat. |
+| `foldBelseje(tarolo)` | Kivágott gömb a Föld rétegeivel; réteg kiemelése gombbal. |
+| `toltesek(tarolo)` | Elektromos vonzás és taszítás nyilakkal. |
+
+* **Közös színpad:** `szinpad(tarolo, opciok)` hozza létre a renderert és a kamerát. Húzással forgatható, görgetéssel nagyítható; a ciklus csak akkor fut, amikor a tároló látszik. Visszaad egy objektumot, amelyen `ciklus(fn)`-nel adhatsz hozzá képkockánkénti frissítést (`fn(dt, ido)`).
+* **Beállítások:** `opciok.tavol` (kamera távolsága), `pitch`/`yaw` (kezdő nézet), `interaktiv` (false: nem forgatható), `csillagok` (csillagos háttér).
+* **Új jelenet:** írj egy `function sajatJelenet(tarolo)` függvényt a `3d.js`-ben (másolj egy meglévőt), tegyél az `animaciok.html`-be egy `<div class="anim" id="…-vaszon">` elemet, és hívd meg az `animaciok.js`-ben.
+* **Textúrák:** a Föld és a Hold felszíne programból készül (`foldTextura()`, `holdTextura()`), nincs külső képfájl.
+* **Hozzáférhetőség:** ha a böngészőben be van kapcsolva a „mozgás csökkentése", a jelenetek csak egy állóképet rajzolnak. WebGL nélküli böngészőben tájékoztató szöveg jelenik meg.
+
 ## 8. Új tartalom hozzáadása
 
 1. **Új fejezet:** tedd a PDF-et és a `feladatok.html`-t a tankönyv mappájába, majd vegyél fel egy blokkot a `fejezetek` listába (`data/konyvek.js`).
@@ -117,6 +141,7 @@ Az XML-t kézzel vagy a [draw.io](https://www.drawio.com/) szerkesztővel is el�
 ## 9. Licencek
 
 * **mxGraph** – Apache License 2.0 (`assets/vendor/mxgraph/LICENSE`).
+* **three.js** – MIT licenc (`assets/vendor/three/LICENSE`).
 * **Tankönyvek** – az Oktatási Hivatal kiadványai; a felhasználásra vonatkozó jogosultságot az üzemeltető vállalja.
 * **Feladatok, kód** – saját készítésű.
 

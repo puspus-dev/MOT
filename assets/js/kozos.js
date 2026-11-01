@@ -12,7 +12,7 @@ const MENU = [
   { fel: "segitseg.html",    nev: "Segítség" },
   { fel: "rolunk.html",  nev: "Rólunk" },
 ];
-const LOGO_FAJL = "assets/img/logo.png";   // ha nincs ott a fájl, a „MOT" jelvény látszik
+const LOGO_FAJL = "assets/img/logo.svg";   // ha nincs ott a fájl, a „MOT" jelvény látszik
 
 const $ = (v) => document.querySelector(v);
 
